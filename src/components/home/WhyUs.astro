@@ -1,0 +1,51 @@
+---
+// Home page "Why Golden Pillar" section: 3 differentiator points on one
+// side, and a stat counter row (years / projects / clients) on the other.
+import { t, type Lang } from '../../i18n';
+import { company } from '../../data/company';
+import SectionHeading from '../SectionHeading.astro';
+import Reveal from '../Reveal.astro';
+import Stat from '../Stat.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const dict = t(lang);
+---
+
+<section class="bg-ivory">
+  <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <Reveal>
+      <SectionHeading title={dict.home.whyTitle} class="mx-auto text-center" />
+    </Reveal>
+
+    <div class="mt-14 grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+      <div class="grid gap-8 sm:grid-cols-3 lg:grid-cols-1">
+        {dict.home.whyPoints.map((point, i) => (
+          <Reveal delay={(i + 1) as 1 | 2 | 3} class="flex gap-4">
+            <span
+              class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold text-xs font-semibold text-gold"
+              aria-hidden="true"
+            >
+              {i + 1}
+            </span>
+            <div>
+              <h3 class="font-display text-lg font-semibold text-ink">{point.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-stone">{point.body}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal delay={4} class="rounded-lg border border-gold/20 bg-sand/40 p-8 sm:p-10">
+        <div class="grid grid-cols-3 gap-6">
+          <Stat value={company.stats.years} label={dict.home.statsLabels.years} suffix="+" />
+          <Stat value={company.stats.projects} label={dict.home.statsLabels.projects} suffix="+" />
+          <Stat value={company.stats.clients} label={dict.home.statsLabels.clients} suffix="+" />
+        </div>
+      </Reveal>
+    </div>
+  </div>
+</section>

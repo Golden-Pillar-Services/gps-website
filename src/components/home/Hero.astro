@@ -1,0 +1,54 @@
+---
+// Home page hero: full-viewport charcoal band with a logo-derived pillar
+// line-draw mark, a staggered headline, sub copy, dual CTAs, faint pillar
+// watermark strokes in the background, and a gold hairline bottom rule.
+import { t, localePath, type Lang } from '../../i18n';
+import { company } from '../../data/company';
+import Reveal from '../Reveal.astro';
+import Button from '../Button.astro';
+import PillarLineDraw from '../PillarLineDraw.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const dict = t(lang);
+const heroLines = dict.home.heroTitle.split('\n');
+---
+
+<section class="relative flex min-h-screen items-center overflow-hidden border-b border-gold/50 bg-charcoal">
+  {/* Faint pillar watermark strokes — decorative, static, never competes
+      with the foreground content or counts as a large gold fill. */}
+  <PillarLineDraw
+    animate={false}
+    class="pointer-events-none absolute -start-16 top-1/2 h-[140%] w-auto -translate-y-1/2 text-gold-light/[0.07] sm:-start-8"
+  />
+  <PillarLineDraw
+    animate={false}
+    class="pointer-events-none absolute -end-24 top-1/2 hidden h-[120%] w-auto -translate-y-1/2 text-gold-light/[0.05] sm:-end-10 sm:block"
+  />
+
+  <div class="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-32 text-center sm:px-6">
+    <Reveal class="mb-8 text-gold-light">
+      <PillarLineDraw class="h-14 w-auto sm:h-16" />
+    </Reveal>
+
+    <h1 class="font-display text-4xl font-semibold leading-[1.1] text-ivory sm:text-6xl lg:text-7xl">
+      {heroLines.map((line, i) => (
+        <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
+          {line}
+        </Reveal>
+      ))}
+    </h1>
+
+    <Reveal delay={3} class="mt-6 max-w-2xl text-lg text-ivory/75 sm:text-xl">
+      <p>{dict.home.heroSub}</p>
+    </Reveal>
+
+    <Reveal delay={4} class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
+      <Button href={company.whatsappLink} variant="outline">{dict.cta.whatsapp}</Button>
+    </Reveal>
+  </div>
+</section>

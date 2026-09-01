@@ -1,0 +1,36 @@
+---
+// Shared closing CTA band: charcoal background, Fraunces headline, gold +
+// WhatsApp CTAs. Used on the home page and reused by Services/About/
+// Projects/Contact pages, so it lives at the shared component path rather
+// than nested under components/home/.
+import { t, localePath, type Lang } from '../i18n';
+import { company } from '../data/company';
+import Reveal from './Reveal.astro';
+import Button from './Button.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const dict = t(lang);
+---
+
+<section class="border-t border-gold/30 bg-charcoal">
+  <div class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
+    <Reveal>
+      <h2 class="font-display text-3xl font-semibold text-ivory sm:text-4xl">
+        {dict.home.ctaBand.title}
+      </h2>
+    </Reveal>
+    <Reveal delay={1}>
+      <p class="mx-auto mt-4 max-w-xl text-base text-ivory/75 sm:text-lg">
+        {dict.home.ctaBand.sub}
+      </p>
+    </Reveal>
+    <Reveal delay={2} class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
+      <Button href={company.whatsappLink} variant="outline">{dict.cta.whatsapp}</Button>
+    </Reveal>
+  </div>
+</section>

@@ -1,0 +1,92 @@
+---
+// Home page "What We Do" section: 4 service cards on a sand band, each with
+// an icon, title, tagline and an underline-sweep "Learn more" link. Cards
+// lift and gain a gold top rule on hover.
+import { t, localePath, type Lang } from '../../i18n';
+import { services, type ServiceSlug } from '../../data/services';
+import SectionHeading from '../SectionHeading.astro';
+import Reveal from '../Reveal.astro';
+import IconFitout from '../icons/IconFitout.astro';
+import IconCleaning from '../icons/IconCleaning.astro';
+import IconJoinery from '../icons/IconJoinery.astro';
+import IconSignage from '../icons/IconSignage.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const dict = t(lang);
+
+const icons: Record<ServiceSlug, typeof IconFitout> = {
+  'fitout-construction': IconFitout,
+  'cleaning-services': IconCleaning,
+  joinery: IconJoinery,
+  signage: IconSignage,
+};
+---
+
+<section class="bg-sand">
+  <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <Reveal>
+      <SectionHeading
+        eyebrow={dict.nav.services}
+        title={dict.home.servicesTitle}
+        sub={dict.home.servicesSub}
+        class="mx-auto text-center"
+      />
+    </Reveal>
+
+    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {services.map((service, i) => {
+        const Icon = icons[service.slug];
+        return (
+          <Reveal delay={((i % 6) + 1) as 1 | 2 | 3 | 4} as="div">
+            <a
+              href={localePath(lang, `/services/${service.slug}`)}
+              class="group flex h-full flex-col rounded-lg border-t-2 border-transparent bg-ivory p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-lg"
+            >
+              <Icon class="h-10 w-10 text-gold" />
+              <h3 class="mt-5 font-display text-xl font-semibold text-ink">
+                {lang === 'ar' ? service.title.ar : service.title.en}
+              </h3>
+              <p class="mt-3 flex-1 text-sm leading-relaxed text-stone">
+                {lang === 'ar' ? service.tagline.ar : service.tagline.en}
+              </p>
+              <span class="gp-learn-more mt-6 inline-flex w-fit items-center text-sm font-semibold text-gold">
+                {dict.cta.learnMore}
+              </span>
+            </a>
+          </Reveal>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Underline-sweep on hover for the "Learn more" affordance. */
+  .gp-learn-more {
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .gp-learn-more::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    bottom: 0;
+    height: 1.5px;
+    width: 100%;
+    background: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [dir='rtl'] .gp-learn-more::after {
+    transform-origin: right;
+  }
+  a:hover .gp-learn-more::after,
+  a:focus-visible .gp-learn-more::after {
+    transform: scaleX(1);
+  }
+</style>
