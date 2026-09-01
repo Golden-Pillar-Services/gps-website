@@ -181,11 +181,14 @@ export function initProjects(): void {
       const dx = endX - touchStartX;
       if (Math.abs(dx) < SWIPE_THRESHOLD) return;
       // Touch swipe is a content-follows-finger gesture (iOS Photos,
-      // Instagram, etc.), which is the OPPOSITE mapping from the arrow-key
-      // physical-direction mapping above: a leftward drag should advance to
-      // the next image, not the previous one. Invert here only — keyboard
-      // nav via handleDirection('left'/'right') above stays untouched.
-      handleDirection(dx < 0 ? 'right' : 'left');
+      // Instagram, etc.): a leftward drag always advances to the next
+      // image, regardless of reading direction. This is the opposite of
+      // handleDirection()'s RTL-aware remap (which exists for the arrow
+      // keys, where "left" means "toward the start of reading order").
+      // Go straight to goNext/goPrev here so swipe stays a fixed physical
+      // gesture in both languages instead of being reading-direction-aware.
+      if (dx < 0) goNext();
+      else goPrev();
     },
     { passive: true },
   );
