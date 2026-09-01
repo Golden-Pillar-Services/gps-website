@@ -1,0 +1,255 @@
+---
+// Journey timeline ("Lifeline"-style): an animated rail with pillar-motif
+// milestone markers that draws itself in on first scroll-into-view.
+//
+// RTL handling (see the two rail rulesets in <style> below): the DOM is
+// always in chronological order (earliest milestone first). On desktop the
+// list is a plain `flex-direction: row` — never `row-reverse` — so the
+// browser's own bidi handling reverses the visual order for `dir="rtl"`
+// (the first flex item renders at the inline-start edge, which is the
+// *right* in RTL). The rail's `scaleX` draw-in reuses that logic for
+// position (`inset-inline-start`) but `transform-origin` has no logical
+// keyword, so it is flipped explicitly with `[dir='rtl'] .gp-timeline-rail`
+// (same pattern already used in Button.astro's ghost underline-sweep).
+// On mobile the rail is always vertical, top-to-bottom, in both languages.
+import type { Lang } from '../../i18n';
+import { milestones } from '../../data/milestones';
+import logoSquareRaw from '../../assets/logo-square.svg?raw';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const pillarGlyph = logoSquareRaw
+  .replaceAll('#343434', 'currentColor')
+  .replaceAll('#c9932b', 'currentColor')
+  .replace('<svg ', '<svg class="h-4 w-4" ');
+---
+
+<div class="gp-timeline" data-timeline>
+  <div class="gp-timeline-rail" data-timeline-rail aria-hidden="true"></div>
+  <ol class="gp-timeline-list">
+    {
+      milestones.map((m, i) => {
+        const title = lang === 'ar' ? m.title.ar : m.title.en;
+        const body = lang === 'ar' ? m.body.ar : m.body.en;
+        return (
+          <li class="gp-timeline-item" style={`--i:${i}`}>
+            <div class="gp-timeline-marker-wrap">
+              <button
+                type="button"
+                class="gp-timeline-marker"
+                aria-label={`${m.year} — ${title}`}
+              >
+                <Fragment set:html={pillarGlyph} />
+              </button>
+            </div>
+            <span class="gp-timeline-year font-display" aria-hidden="true">
+              {m.year}
+            </span>
+            <div class="gp-timeline-card">
+              <h3 class="font-display text-lg font-semibold text-ink">{title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-stone">{body}</p>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ol>
+</div>
+
+<style>
+  .gp-timeline {
+    position: relative;
+  }
+
+  .gp-timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* --- Rail: mobile default is vertical, top-to-bottom (both languages) --- */
+  .gp-timeline-rail {
+    position: absolute;
+    inset-inline-start: 1.375rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-gold);
+    transform-origin: top;
+  }
+
+  .gp-timeline-item {
+    position: relative;
+    padding-inline-start: 4rem;
+  }
+
+  .gp-timeline-marker-wrap {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+  }
+
+  .gp-timeline-marker {
+    display: flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 2px solid var(--color-gold);
+    background: var(--color-ivory);
+    color: var(--color-gold);
+    cursor: default;
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .gp-timeline-year {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-gold);
+  }
+
+  .gp-timeline-card {
+    max-width: 26rem;
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
+    background: var(--color-ivory);
+    padding: 1.25rem 1.5rem;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Hover/focus a milestone → its card lifts with a gold glow. */
+  .gp-timeline-item:hover .gp-timeline-card,
+  .gp-timeline-item:focus-within .gp-timeline-card {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px -12px color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .gp-timeline-item:hover .gp-timeline-marker,
+  .gp-timeline-item:focus-within .gp-timeline-marker {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-gold) 18%, transparent);
+  }
+
+  /* --- Desktop: horizontal scroll-snap rail, chronological DOM order,
+     flipped visually for RTL by the browser's own bidi handling. --- */
+  @media (min-width: 1024px) {
+    .gp-timeline-list {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 1.5rem;
+      padding-block: 0.25rem 2rem;
+      padding-inline: 1.5rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gp-timeline-item {
+      flex: 0 0 20rem;
+      padding-inline-start: 0;
+      padding-inline-end: 2.5rem;
+      scroll-snap-align: start;
+    }
+
+    .gp-timeline-marker-wrap {
+      position: static;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .gp-timeline-year {
+      text-align: center;
+    }
+
+    .gp-timeline-card {
+      max-width: none;
+    }
+
+    /* Rail becomes horizontal, aligned with marker centers, spanning the
+       full scrollable width. Position/size use logical properties so they
+       already track `dir` — only the scale transform-origin needs an
+       explicit RTL override (see file header comment). */
+    .gp-timeline-rail {
+      inset-inline-start: 1.5rem;
+      top: 1.375rem;
+      bottom: auto;
+      width: calc(100% - 3rem);
+      height: 2px;
+      transform-origin: left;
+    }
+
+    [dir='rtl'] .gp-timeline-rail {
+      transform-origin: right;
+    }
+  }
+
+  /* --- Entrance animation: hidden state + reveal on `.is-drawn`, gated
+     behind prefers-reduced-motion so the base (no-JS / reduced-motion)
+     state above is always the fully-visible final state. --- */
+  @media (prefers-reduced-motion: no-preference) {
+    .gp-timeline-rail {
+      transform: scaleY(0);
+      transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .gp-timeline.is-drawn .gp-timeline-rail {
+      transform: scaleY(1);
+    }
+
+    .gp-timeline-marker {
+      transform: scale(0);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i, 0) * 150ms);
+    }
+    .gp-timeline.is-drawn .gp-timeline-marker {
+      transform: scale(1);
+    }
+    /* Hover/focus lift must win over the entrance transform once drawn. */
+    .gp-timeline.is-drawn .gp-timeline-item:hover .gp-timeline-marker,
+    .gp-timeline.is-drawn .gp-timeline-item:focus-within .gp-timeline-marker {
+      transform: scale(1);
+    }
+
+    .gp-timeline-card {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(12px);
+      transition:
+        opacity 0.6s ease-out calc(var(--i, 0) * 150ms + 200ms),
+        filter 0.6s ease-out calc(var(--i, 0) * 150ms + 200ms),
+        transform 0.6s ease-out calc(var(--i, 0) * 150ms + 200ms);
+    }
+    .gp-timeline.is-drawn .gp-timeline-card {
+      opacity: 1;
+      filter: blur(0);
+      transform: none;
+    }
+    .gp-timeline.is-drawn .gp-timeline-item:hover .gp-timeline-card,
+    .gp-timeline.is-drawn .gp-timeline-item:focus-within .gp-timeline-card {
+      transform: translateY(-4px);
+    }
+
+    @media (min-width: 1024px) {
+      .gp-timeline-rail {
+        transform: scaleX(0);
+        transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .gp-timeline.is-drawn .gp-timeline-rail {
+        transform: scaleX(1);
+      }
+    }
+  }
+</style>
