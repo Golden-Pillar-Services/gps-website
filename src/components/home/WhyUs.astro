@@ -18,7 +18,10 @@ const { lang } = Astro.props;
 const dict = t(lang);
 ---
 
-<section class="bg-sand">
+<section class="relative overflow-hidden bg-charcoal">
+  <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
+    <span class="absolute end-0 bottom-0 h-7 w-7 border-b-2 border-e-2 border-gold-light/40"></span>
+  </div>
   <div class="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-16 lg:py-32">
     <Reveal class="relative lg:-mb-16 lg:mt-16">
       <Image
@@ -28,27 +31,27 @@ const dict = t(lang);
         sizes="(min-width: 1024px) 40vw, 90vw"
         class="aspect-4/5 w-full rounded-sm object-cover shadow-xl"
       />
-      <div class="pointer-events-none absolute -inset-3 -z-10 border border-gold/40" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute -inset-3 -z-10 border border-gold-light/30" aria-hidden="true"></div>
     </Reveal>
 
     <div>
       <Reveal>
-        <SectionHeading title={dict.home.whyTitle} />
+        <SectionHeading title={dict.home.whyTitle} dark />
       </Reveal>
 
       <div class="mt-10 space-y-8">
         {dict.home.whyPoints.map((point, i) => (
-          <Reveal delay={(i + 1) as 1 | 2 | 3} class="border-s-2 border-gold/40 ps-5">
-            <h3 class="font-display text-lg font-semibold text-ink">{point.title}</h3>
-            <p class="mt-1.5 text-sm leading-relaxed text-stone-dark">{point.body}</p>
+          <Reveal delay={(i + 1) as 1 | 2 | 3} class="border-s-2 border-gold-light/40 ps-5">
+            <h3 class="font-display text-lg font-semibold text-ivory">{point.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-ivory/65">{point.body}</p>
           </Reveal>
         ))}
       </div>
 
-      <Reveal delay={4} class="mt-12 grid grid-cols-3 gap-6 border-t border-gold/25 pt-8">
-        <Stat value={company.stats.years} label={dict.home.statsLabels.years} suffix="+" />
-        <Stat value={company.stats.projects} label={dict.home.statsLabels.projects} suffix="+" />
-        <Stat value={company.stats.clients} label={dict.home.statsLabels.clients} suffix="+" />
+      <Reveal delay={4} class="mt-12 grid grid-cols-3 gap-6 border-t border-gold-light/25 pt-8">
+        <Stat dark value={company.stats.years} label={dict.home.statsLabels.years} suffix="+" />
+        <Stat dark value={company.stats.projects} label={dict.home.statsLabels.projects} suffix="+" />
+        <Stat dark value={company.stats.clients} label={dict.home.statsLabels.clients} suffix="+" />
       </Reveal>
     </div>
   </div>

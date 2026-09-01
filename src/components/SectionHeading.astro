@@ -9,18 +9,29 @@ interface Props {
   /** Heading level to render for the title. Defaults to h2; pass "h1" when
    * this SectionHeading is a page's single top-level heading. */
   as?: 'h1' | 'h2';
+  /** Set on a charcoal/dark section so title/sub switch to light text. */
+  dark?: boolean;
 }
 
-const { eyebrow, title, sub, class: className, as: Tag = 'h2' } = Astro.props;
+const { eyebrow, title, sub, class: className, as: Tag = 'h2', dark = false } = Astro.props;
 ---
 
 <div class:list={['max-w-2xl', className]}>
   {eyebrow && (
     <div class="mb-3 flex items-center gap-3">
-      <span class="h-px w-8 bg-gold" aria-hidden="true"></span>
-      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">{eyebrow}</span>
+      <span class:list={['h-px w-8', dark ? 'bg-gold-light/70' : 'bg-gold']} aria-hidden="true"></span>
+      <span
+        class:list={[
+          'font-mono text-[0.7rem] uppercase tracking-[0.18em]',
+          dark ? 'text-gold-light/90' : 'text-gold',
+        ]}
+      >
+        {eyebrow}
+      </span>
     </div>
   )}
-  <Tag class="font-display text-3xl font-semibold text-ink sm:text-4xl">{title}</Tag>
-  {sub && <p class="mt-4 text-base text-stone-dark sm:text-lg">{sub}</p>}
+  <Tag class:list={['font-display text-3xl font-semibold sm:text-4xl', dark ? 'text-ivory' : 'text-ink']}>
+    {title}
+  </Tag>
+  {sub && <p class:list={['mt-4 text-base sm:text-lg', dark ? 'text-ivory/70' : 'text-stone-dark']}>{sub}</p>}
 </div>

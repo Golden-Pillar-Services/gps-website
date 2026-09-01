@@ -10,9 +10,16 @@ interface Props {
 
 const { class: className = '' } = Astro.props;
 
+// Strip the source's <style> block (class names .st0/.st1) and bake
+// `currentColor` into fill attributes directly instead — an inline SVG's
+// <style> applies document-wide, not just to its own subtree, so leaving
+// it in place collides with any other component reusing the same class
+// names from the same logo family (see Header.astro for the same fix and
+// the full explanation — this is what caused it in the first place).
 const pillarGlyph = logoSquareRaw
-  .replaceAll('#343434', 'currentColor')
-  .replaceAll('#c9932b', 'currentColor')
+  .replace(/<style>[\s\S]*?<\/style>/, '')
+  .replaceAll('class="st0"', 'fill="currentColor"')
+  .replaceAll('class="st1"', 'fill="currentColor"')
   .replace('<svg ', '<svg class="h-6 w-6" ');
 ---
 

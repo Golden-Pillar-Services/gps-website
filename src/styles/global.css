@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/fraunces';
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
 @import '@fontsource/ibm-plex-sans-arabic';
 /* Fontsource's default import above ships weight 400 only. Headings use
    font-semibold/bold, so pull in the real 600/700 weight files too —
@@ -29,6 +30,9 @@
   --font-display: 'Fraunces Variable', Georgia, serif;
   --font-sans: 'Inter Variable', system-ui, sans-serif;
   --font-arabic: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  /* Precision/spec-sheet accent — small labels, stat figures, scope
+     numbering. Never body copy. Reinforces "engineered", not decorative. */
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 }
 
 html { scroll-behavior: smooth; }

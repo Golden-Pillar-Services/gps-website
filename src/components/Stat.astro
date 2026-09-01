@@ -8,14 +8,23 @@ interface Props {
   /** Optional string appended after the number, e.g. '+', '%'. */
   suffix?: string;
   class?: string;
+  /** Set on a charcoal/dark section so the label switches to light text. */
+  dark?: boolean;
 }
 
-const { value, label, suffix, class: className } = Astro.props;
+const { value, label, suffix, class: className, dark = false } = Astro.props;
 ---
 
 <div class:list={['text-center', className]}>
-  <p class="font-display text-4xl font-semibold text-gold sm:text-5xl">
+  <p class:list={['font-display text-4xl font-semibold sm:text-5xl', dark ? 'text-gold-light' : 'text-gold']}>
     <span data-counter={value}>0</span>{suffix}
   </p>
-  <p class="mt-2 text-sm font-medium uppercase tracking-wide text-stone-dark">{label}</p>
+  <p
+    class:list={[
+      'mt-2 font-mono text-xs uppercase tracking-[0.14em]',
+      dark ? 'text-ivory/60' : 'text-stone-dark',
+    ]}
+  >
+    {label}
+  </p>
 </div>

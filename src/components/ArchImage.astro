@@ -1,7 +1,8 @@
 ---
-// ArchImage: responsive, optimized photo clipped to a subtle arch-top
-// shape (square/soft corners at the bottom, generous rounding at the top),
-// echoing the pillar/archway visual language used across the site.
+// ArchImage: responsive, optimized photo in a plain sharp-cornered frame
+// (rounded-sm, matching every other surface on the site). Named for
+// historical reasons — it used to clip to a soft arch-top shape, which
+// read as decorative/generic rather than deliberate and has been dropped.
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -24,7 +25,7 @@ const {
 } = Astro.props;
 ---
 
-<div class:list={['gp-arch-image overflow-hidden', className]}>
+<div class:list={['overflow-hidden rounded-sm', className]}>
   <Picture
     src={src}
     alt={alt}
@@ -36,11 +37,3 @@ const {
     class="h-full w-full object-cover"
   />
 </div>
-
-<style>
-  .gp-arch-image {
-    /* Subtle arch: generous rounding at the top corners only, tuned to
-       read as an architectural arch rather than a full pill. */
-    border-radius: 999px 999px 240px 240px / 120px 120px 24px 24px;
-  }
-</style>

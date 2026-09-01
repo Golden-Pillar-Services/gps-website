@@ -16,9 +16,18 @@ const { lang } = Astro.props;
 const dict = t(lang);
 ---
 
-<section class="border-t border-gold/30 bg-charcoal">
-  <div class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
-    <Reveal>
+<section class="relative overflow-hidden border-t border-gold/30 bg-charcoal">
+  <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
+    <span class="absolute start-0 top-0 h-7 w-7 border-t-2 border-s-2 border-gold-light/30"></span>
+    <span class="absolute end-0 bottom-0 h-7 w-7 border-b-2 border-e-2 border-gold-light/30"></span>
+  </div>
+  <div class="relative mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
+    <Reveal class="mb-4 flex items-center justify-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-gold-light/80">
+      <span class="h-px w-8 bg-gold-light/60" aria-hidden="true"></span>
+      {lang === 'ar' ? company.nameAr : company.nameEn}
+      <span class="h-px w-8 bg-gold-light/60" aria-hidden="true"></span>
+    </Reveal>
+    <Reveal delay={1}>
       <h2 class="font-display text-3xl font-semibold text-ivory sm:text-4xl">
         {dict.home.ctaBand.title}
       </h2>

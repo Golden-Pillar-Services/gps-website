@@ -11,12 +11,23 @@ interface Props {
 const { lang, currentPath } = Astro.props;
 const dict = t(lang);
 
-// Header sits on a translucent charcoal bar over the hero, so recolor the
-// logo for a dark background: the dark wordmark strokes become ivory, the
-// gold pillar strokes lighten a touch for contrast.
+// Header is always solid charcoal, so recolor the logo for a dark
+// background: the dark wordmark strokes become ivory, the gold pillar
+// strokes lighten a touch for contrast.
+//
+// The source SVG defines its two colors via a `<style>` block using class
+// names (.st0/.st1) rather than fill attributes. An inline SVG's <style>
+// is NOT scoped to its own subtree — it applies document-wide — so any
+// other component reusing the same class names (e.g. PillarDivider, which
+// also derives from a logo SVG with .st0/.st1) collides with this one:
+// whichever <style> block appears later in the DOM wins, silently
+// recoloring this logo to something else entirely. Strip the <style>
+// block and bake the colors into `fill` attributes directly instead, so
+// there's no shared class name left to collide on.
 const headerLogo = logoFullRaw
-  .replaceAll('#343434', '#FAF7F0')
-  .replaceAll('#c9932b', '#E3B65A');
+  .replace(/<style>[\s\S]*?<\/style>/, '')
+  .replaceAll('class="st0"', 'fill="#E3B65A"')
+  .replaceAll('class="st1"', 'fill="#FAF7F0"');
 
 const navItems = [
   { href: localePath(lang, '/'), label: dict.nav.home },
@@ -30,7 +41,7 @@ const isCurrent = (href: string) =>
   href === currentPath || (href.length > 1 && currentPath.startsWith(`${href}/`));
 ---
 
-<header class="sticky top-0 z-50 border-b border-gold/20 bg-charcoal/90 backdrop-blur supports-[backdrop-filter]:bg-charcoal/75">
+<header class="sticky top-0 z-50 border-b border-gold/20 bg-charcoal">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3 sm:px-6">
     <a href={localePath(lang, '/')} class="shrink-0">
       <Fragment set:html={headerLogo} />

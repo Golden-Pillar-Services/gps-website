@@ -1,16 +1,15 @@
 ---
-// Home page hero: asymmetric split — large left-aligned typography over
-// charcoal on one side, a real site photograph bleeding to the viewport
-// edge on the other. Replaces the earlier centered-text-on-flat-color
-// version: photography carries proof of real work, asymmetry breaks the
-// template-grid look, and the headline is scaled up to do most of the
-// visual work itself.
+// Home page hero, v2: full-bleed site photograph as the entire canvas
+// (not a 50/50 split), heavy bottom-weighted gradient, text anchored low
+// rather than centered, a monospace "spec sheet" label row + corner
+// registration marks for a precision/engineered feel, and one italic
+// word in the headline for emphasis — closer to the bold, dark, textured
+// reference direction than the earlier split-hero version.
 import { t, localePath, type Lang } from '../../i18n';
 import { company } from '../../data/company';
 import { services } from '../../data/services';
 import Reveal from '../Reveal.astro';
 import Button from '../Button.astro';
-import PillarLineDraw from '../PillarLineDraw.astro';
 import { Image } from 'astro:assets';
 import heroImg from '../../assets/img/hero-fitout.jpg';
 
@@ -21,58 +20,63 @@ interface Props {
 const { lang } = Astro.props;
 const dict = t(lang);
 const heroLines = dict.home.heroTitle.split('\n');
-const eyebrow = services.map((s) => (lang === 'ar' ? s.title.ar : s.title.en)).join(' · ');
+const specLabel = [
+  lang === 'ar' ? 'سلطنة عُمان' : 'OMAN',
+  lang === 'ar' ? 'تأسست 2012' : 'EST. 2012',
+  services.map((s) => (lang === 'ar' ? s.title.ar : s.title.en)).join(' / '),
+].join('  ·  ');
 ---
 
-<section class="relative overflow-hidden bg-charcoal">
-  <div class="relative grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-    {/* Text column */}
-    <div class="relative z-10 flex flex-col justify-center px-6 py-24 sm:px-10 lg:px-16 lg:py-0">
-      <PillarLineDraw
-        animate={false}
-        class="pointer-events-none absolute -start-10 top-0 h-[130%] w-auto text-gold-light/[0.06]"
-      />
+<section class="relative min-h-screen overflow-hidden bg-charcoal">
+  <Image
+    src={heroImg}
+    alt=""
+    widths={[960, 1400, 1800, 2200]}
+    sizes="100vw"
+    loading="eager"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  {/* Bottom-weighted gradient — photo stays clearly visible in the top
+      third, darkens enough behind the text block (roughly the bottom
+      two-thirds) for guaranteed contrast against busy site photography. */}
+  <div class="absolute inset-0 bg-linear-to-t from-charcoal from-10% via-charcoal/90 via-45% to-transparent to-85%" aria-hidden="true"></div>
 
-      <Reveal class="relative mb-6 flex items-center gap-3 text-gold">
-        <span class="h-px w-8 bg-gold" aria-hidden="true"></span>
-        <span class="text-xs font-semibold uppercase tracking-[0.22em]">{eyebrow}</span>
-      </Reveal>
+  {/* Corner registration marks — a precision/blueprint device instead of
+      a decorative flourish, reinforcing "measured, engineered work". */}
+  <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
+    <span class="absolute start-0 top-0 h-8 w-8 border-t-2 border-s-2 border-gold-light/60"></span>
+    <span class="absolute end-0 top-0 h-8 w-8 border-t-2 border-e-2 border-gold-light/60"></span>
+    <span class="absolute start-0 bottom-0 h-8 w-8 border-b-2 border-s-2 border-gold-light/60"></span>
+    <span class="absolute end-0 bottom-0 h-8 w-8 border-b-2 border-e-2 border-gold-light/60"></span>
+  </div>
 
-      <h1 class="relative font-display text-[2.75rem] font-semibold leading-[0.98] tracking-tight text-ivory sm:text-6xl lg:text-[5.5rem]">
-        {heroLines.map((line, i) => (
-          <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
-            {line}
-          </Reveal>
-        ))}
-      </h1>
+  <div class="relative flex min-h-screen flex-col justify-end px-6 pb-16 pt-32 sm:px-10 sm:pb-20 lg:px-16 lg:pb-24">
+    <Reveal class="mb-5 flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-gold-light/90 sm:text-xs">
+      <span class="h-px w-8 bg-gold-light/70" aria-hidden="true"></span>
+      <span>{specLabel}</span>
+    </Reveal>
 
-      <Reveal delay={3} class="relative mt-8 max-w-md text-lg leading-relaxed text-ivory/70">
-        <p>{dict.home.heroSub}</p>
-      </Reveal>
+    <h1 class="max-w-4xl font-display text-[3rem] font-semibold leading-[0.95] tracking-tight text-ivory drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)] sm:text-7xl lg:text-[6.5rem]">
+      {heroLines.map((line, i) => (
+        <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
+          {i === heroLines.length - 1 ? (
+            // Arabic has no italic glyphs — browsers fake-slant it, which
+            // reads as broken. Emphasis stays color-only in Arabic.
+            <em class:list={['not-italic text-gold-light', lang === 'en' && 'italic']}>{line}</em>
+          ) : line}
+        </Reveal>
+      ))}
+    </h1>
 
-      <Reveal delay={4} class="relative mt-10 flex flex-wrap items-center gap-4">
-        <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
-        <Button href={company.whatsappLink} variant="ghost-light">{dict.cta.whatsapp}</Button>
-      </Reveal>
-    </div>
+    <Reveal delay={3} class="mt-7 max-w-lg text-lg leading-relaxed text-ivory/75">
+      <p>{dict.home.heroSub}</p>
+    </Reveal>
 
-    {/* Image column — bleeds to the outer edge, no container padding */}
-    <Reveal delay={2} class="relative min-h-[45vh] lg:min-h-screen">
-      <Image
-        src={heroImg}
-        alt=""
-        widths={[640, 960, 1400, 1800]}
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        loading="eager"
-        class="absolute inset-0 h-full w-full object-cover"
-      />
-      <div class="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent lg:bg-linear-to-l lg:from-transparent lg:via-transparent lg:to-charcoal/10" aria-hidden="true"></div>
-      {/* Gold frame line, offset from the image edge — the one considered
-          decorative flourish, echoing the joinery-precision hairline motif
-          used across the site. */}
-      <div class="pointer-events-none absolute inset-6 border border-gold-light/25 sm:inset-8" aria-hidden="true"></div>
+    <Reveal delay={4} class="mt-9 flex flex-wrap items-center gap-4">
+      <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
+      <Button href={company.whatsappLink} variant="ghost-light">{dict.cta.whatsapp}</Button>
     </Reveal>
   </div>
 
-  <div class="h-px bg-gold/50" aria-hidden="true"></div>
+  <div class="absolute inset-x-0 bottom-0 h-px bg-gold/50" aria-hidden="true"></div>
 </section>
