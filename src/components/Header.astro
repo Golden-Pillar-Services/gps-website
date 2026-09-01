@@ -53,7 +53,7 @@ const isCurrent = (href: string) =>
       <LangSwitch lang={lang} currentPath={currentPath} />
       <a
         href={localePath(lang, '/contact')}
-        class="inline-flex min-h-11 items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
+        class="inline-flex min-h-11 items-center rounded-sm bg-gold px-4 py-2 text-sm font-semibold text-charcoal shadow-[0_6px_16px_-6px_rgba(201,147,43,0.5)] transition-all hover:bg-gold-light hover:-translate-y-0.5"
       >
         {dict.cta.getQuote}
       </a>
@@ -86,7 +86,7 @@ const isCurrent = (href: string) =>
           <LangSwitch lang={lang} currentPath={currentPath} />
           <a
             href={localePath(lang, '/contact')}
-            class="inline-flex min-h-11 items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
+            class="inline-flex min-h-11 items-center rounded-sm bg-gold px-4 py-2 text-sm font-semibold text-charcoal shadow-[0_6px_16px_-6px_rgba(201,147,43,0.5)] transition-all hover:bg-gold-light hover:-translate-y-0.5"
           >
             {dict.cta.getQuote}
           </a>

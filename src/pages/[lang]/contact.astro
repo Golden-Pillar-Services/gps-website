@@ -26,14 +26,14 @@ const currentPath = localePath(lang, '/contact');
 <Base lang={lang} title={dict.contact.title} description={dict.contact.sub} currentPath={currentPath}>
   {/* Hero */}
   <section class="border-b border-gold/30 bg-sand">
-    <div class="mx-auto max-w-4xl px-4 py-24 text-center sm:px-6">
+    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
       <Reveal>
         <SectionHeading
           as="h1"
           eyebrow={dict.nav.contact}
           title={dict.contact.title}
           sub={dict.contact.sub}
-          class="mx-auto text-center"
+          class="max-w-2xl"
         />
       </Reveal>
     </div>
@@ -95,7 +95,7 @@ const currentPath = localePath(lang, '/contact');
 
       {/* Map */}
       <Reveal delay={1}>
-        <div class="relative h-full min-h-96 overflow-hidden rounded-2xl border border-gold/20 bg-sand/40">
+        <div class="relative h-full min-h-96 overflow-hidden rounded-sm border border-gold/20 bg-sand/40">
           <iframe
             src={company.mapEmbedUrl}
             width="100%"
