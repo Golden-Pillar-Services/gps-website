@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-gold: #C9932B;
+  --color-gold-light: #E3B65A;
+  --color-charcoal: #2B2B2B;
+  --color-ink: #1A1917;
+  --color-ivory: #FAF7F0;
+  --color-sand: #EFE7D8;
+  --color-stone: #8A8578;
+
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-ivory); color: var(--color-ink); }
+
+/* Arabic pages: swap font stack wholesale */
+[dir='rtl'] body, [dir='rtl'] .font-display, [dir='rtl'] .font-sans {
+  font-family: var(--font-arabic);
+}
