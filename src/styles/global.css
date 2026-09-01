@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/inter';
+@import '@fontsource/ibm-plex-sans-arabic';
 
 @theme {
   --color-gold: #C9932B;
