@@ -1,0 +1,27 @@
+---
+// Small section divider echoing the four pillar strokes from the logo mark,
+// flanked by hairlines. The pillar glyph is the logo-square geometry
+// recolored entirely to gold for use on light or dark section backgrounds.
+import logoSquareRaw from '../assets/logo-square.svg?raw';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const pillarGlyph = logoSquareRaw
+  .replaceAll('#343434', 'currentColor')
+  .replaceAll('#c9932b', 'currentColor')
+  .replace('<svg ', '<svg class="h-6 w-6" ');
+---
+
+<div
+  class={`flex items-center justify-center gap-4 py-2 text-gold ${className}`}
+  role="presentation"
+  aria-hidden="true"
+>
+  <span class="h-px w-16 bg-current opacity-30"></span>
+  <Fragment set:html={pillarGlyph} />
+  <span class="h-px w-16 bg-current opacity-30"></span>
+</div>

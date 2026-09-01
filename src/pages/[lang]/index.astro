@@ -1,0 +1,28 @@
+---
+// TEMPORARY smoke-test page — verifies Base.astro renders correctly in both
+// languages. Replaced with the real home page in a later task.
+import Base from '../../layouts/Base.astro';
+import { langs, t, localePath } from '../../i18n';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+const { lang } = Astro.props;
+const dict = t(lang);
+const currentPath = localePath(lang, '/');
+---
+
+<Base
+  lang={lang}
+  title="Golden Pillar Services"
+  description={dict.home.heroSub}
+  currentPath={currentPath}
+>
+  <section class="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
+    <h1 class="whitespace-pre-line font-display text-4xl font-semibold text-ink sm:text-5xl">
+      {dict.home.heroTitle}
+    </h1>
+    <p class="mt-6 text-lg text-stone">{dict.home.heroSub}</p>
+  </section>
+</Base>

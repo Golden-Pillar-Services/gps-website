@@ -1,0 +1,104 @@
+---
+import { t, localePath, type Lang } from '../i18n';
+import LangSwitch from './LangSwitch.astro';
+import logoFullRaw from '../assets/logo-full.svg?raw';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+const dict = t(lang);
+
+// Header sits on a translucent charcoal bar over the hero, so recolor the
+// logo for a dark background: the dark wordmark strokes become ivory, the
+// gold pillar strokes lighten a touch for contrast.
+const headerLogo = logoFullRaw
+  .replaceAll('#343434', '#FAF7F0')
+  .replaceAll('#c9932b', '#E3B65A');
+
+const navItems = [
+  { href: localePath(lang, '/'), label: dict.nav.home },
+  { href: localePath(lang, '/services'), label: dict.nav.services },
+  { href: localePath(lang, '/about'), label: dict.nav.about },
+  { href: localePath(lang, '/projects'), label: dict.nav.projects },
+  { href: localePath(lang, '/contact'), label: dict.nav.contact },
+];
+
+const isCurrent = (href: string) =>
+  href === currentPath || (href.length > 1 && currentPath.startsWith(`${href}/`));
+---
+
+<header class="sticky top-0 z-50 border-b border-gold/20 bg-charcoal/90 backdrop-blur supports-[backdrop-filter]:bg-charcoal/75">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3 sm:px-6">
+    <a href={localePath(lang, '/')} class="shrink-0" aria-label={dict.nav.home}>
+      <Fragment set:html={headerLogo} />
+      <span class="sr-only">Golden Pillar Services</span>
+    </a>
+
+    <nav class="hidden items-center gap-8 md:flex" aria-label={dict.nav.home}>
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class="text-sm font-medium text-ivory/90 transition-colors hover:text-gold-light"
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hidden items-center gap-4 md:flex">
+      <LangSwitch lang={lang} currentPath={currentPath} />
+      <a
+        href={localePath(lang, '/contact')}
+        class="inline-flex items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
+      >
+        {dict.cta.getQuote}
+      </a>
+    </div>
+
+    <details class="relative md:hidden">
+      <summary
+        class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md text-ivory [&::-webkit-details-marker]:hidden [&::marker]:hidden"
+        aria-label={dict.nav.home}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </summary>
+      <div class="absolute end-0 top-full mt-2 w-56 rounded-lg border border-gold/20 bg-charcoal p-4 shadow-xl">
+        <nav class="flex flex-col gap-3" aria-label={dict.nav.home}>
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              class="text-sm font-medium text-ivory/90 transition-colors hover:text-gold-light"
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div class="mt-4 flex items-center justify-between gap-3 border-t border-gold/20 pt-4">
+          <LangSwitch lang={lang} currentPath={currentPath} />
+          <a
+            href={localePath(lang, '/contact')}
+            class="inline-flex items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
+          >
+            {dict.cta.getQuote}
+          </a>
+        </div>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  header :global(svg) {
+    height: 2rem;
+    width: auto;
+  }
+</style>

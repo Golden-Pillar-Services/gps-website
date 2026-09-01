@@ -1,17 +1,24 @@
 ---
-import '../styles/global.css';
+// Root language gate: redirect to /en/ or /ar/ based on browser language,
+// with a no-JS meta-refresh fallback and a visible link either way.
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Golden Pillar Services</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <noscript>
+      <meta http-equiv="refresh" content="0;url=/en/" />
+    </noscript>
+    <script is:inline>
+      location.replace(navigator.language.startsWith('ar') ? '/ar/' : '/en/');
+    </script>
+  </head>
+  <body>
+    <p>
+      Redirecting… <a href="/en/">English</a> / <a href="/ar/">العربية</a>
+    </p>
+  </body>
 </html>
