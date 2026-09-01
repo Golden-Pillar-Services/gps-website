@@ -10,6 +10,9 @@ const { lang } = Astro.props;
 const ariaLabel = lang === 'ar' ? 'تواصل معنا عبر واتساب' : 'Chat with us on WhatsApp';
 ---
 
+<!-- bg-[#25D366] is an intentional exception to the 7-token palette: it's
+     WhatsApp's official brand green, kept so the button reads instantly as
+     "this opens WhatsApp" rather than looking like a generic gold CTA. -->
 <a
   href={company.whatsappLink}
   target="_blank"

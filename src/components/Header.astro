@@ -37,7 +37,7 @@ const isCurrent = (href: string) =>
       <span class="sr-only">Golden Pillar Services</span>
     </a>
 
-    <nav class="hidden items-center gap-8 md:flex" aria-label={dict.nav.home}>
+    <nav class="hidden items-center gap-8 md:flex" aria-label={dict.nav.ariaLabel}>
       {navItems.map((item) => (
         <a
           href={item.href}
@@ -71,7 +71,7 @@ const isCurrent = (href: string) =>
         </svg>
       </summary>
       <div class="absolute end-0 top-full mt-2 w-56 rounded-lg border border-gold/20 bg-charcoal p-4 shadow-xl">
-        <nav class="flex flex-col gap-3" aria-label={dict.nav.home}>
+        <nav class="flex flex-col gap-3" aria-label={dict.nav.ariaLabel}>
           {navItems.map((item) => (
             <a
               href={item.href}

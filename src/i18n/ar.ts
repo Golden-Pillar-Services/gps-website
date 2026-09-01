@@ -7,6 +7,7 @@ export const ar: Dict = {
     about: 'من نحن',
     projects: 'أعمالنا',
     contact: 'تواصل معنا',
+    ariaLabel: 'التنقل الرئيسي',
   },
 
   cta: {

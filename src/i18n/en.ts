@@ -5,6 +5,7 @@ export const en = {
     about: 'About',
     projects: 'Projects',
     contact: 'Contact',
+    ariaLabel: 'Main navigation',
   },
 
   cta: {
