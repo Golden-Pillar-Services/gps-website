@@ -13,10 +13,10 @@ interface Props {
 const { href, variant = 'gold', class: className } = Astro.props;
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-300';
+  'inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3.5 text-sm font-semibold tracking-wide transition-all duration-300';
 
 const variants: Record<string, string> = {
-  gold: 'bg-gold text-charcoal hover:bg-gold-light',
+  gold: 'bg-gold text-charcoal shadow-[0_8px_24px_-8px_rgba(201,147,43,0.55)] hover:bg-gold-light hover:shadow-[0_10px_28px_-6px_rgba(201,147,43,0.6)] hover:-translate-y-0.5',
   outline: 'border border-gold text-gold hover:bg-gold hover:text-charcoal',
   'ghost-light': 'gp-btn-ghost text-ivory',
 };

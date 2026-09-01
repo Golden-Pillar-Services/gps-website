@@ -1,12 +1,18 @@
 ---
-// Home page hero: full-viewport charcoal band with a logo-derived pillar
-// line-draw mark, a staggered headline, sub copy, dual CTAs, faint pillar
-// watermark strokes in the background, and a gold hairline bottom rule.
+// Home page hero: asymmetric split — large left-aligned typography over
+// charcoal on one side, a real site photograph bleeding to the viewport
+// edge on the other. Replaces the earlier centered-text-on-flat-color
+// version: photography carries proof of real work, asymmetry breaks the
+// template-grid look, and the headline is scaled up to do most of the
+// visual work itself.
 import { t, localePath, type Lang } from '../../i18n';
 import { company } from '../../data/company';
+import { services } from '../../data/services';
 import Reveal from '../Reveal.astro';
 import Button from '../Button.astro';
 import PillarLineDraw from '../PillarLineDraw.astro';
+import { Image } from 'astro:assets';
+import heroImg from '../../assets/img/hero-fitout.jpg';
 
 interface Props {
   lang: Lang;
@@ -15,40 +21,58 @@ interface Props {
 const { lang } = Astro.props;
 const dict = t(lang);
 const heroLines = dict.home.heroTitle.split('\n');
+const eyebrow = services.map((s) => (lang === 'ar' ? s.title.ar : s.title.en)).join(' · ');
 ---
 
-<section class="relative flex min-h-screen items-center overflow-hidden border-b border-gold/50 bg-charcoal">
-  {/* Faint pillar watermark strokes — decorative, static, never competes
-      with the foreground content or counts as a large gold fill. */}
-  <PillarLineDraw
-    animate={false}
-    class="pointer-events-none absolute -start-16 top-1/2 h-[140%] w-auto -translate-y-1/2 text-gold-light/[0.07] sm:-start-8"
-  />
-  <PillarLineDraw
-    animate={false}
-    class="pointer-events-none absolute -end-24 top-1/2 hidden h-[120%] w-auto -translate-y-1/2 text-gold-light/[0.05] sm:-end-10 sm:block"
-  />
+<section class="relative overflow-hidden bg-charcoal">
+  <div class="relative grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+    {/* Text column */}
+    <div class="relative z-10 flex flex-col justify-center px-6 py-24 sm:px-10 lg:px-16 lg:py-0">
+      <PillarLineDraw
+        animate={false}
+        class="pointer-events-none absolute -start-10 top-0 h-[130%] w-auto text-gold-light/[0.06]"
+      />
 
-  <div class="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-32 text-center sm:px-6">
-    <Reveal class="mb-8 text-gold-light">
-      <PillarLineDraw class="h-14 w-auto sm:h-16" />
-    </Reveal>
+      <Reveal class="relative mb-6 flex items-center gap-3 text-gold">
+        <span class="h-px w-8 bg-gold" aria-hidden="true"></span>
+        <span class="text-xs font-semibold uppercase tracking-[0.22em]">{eyebrow}</span>
+      </Reveal>
 
-    <h1 class="font-display text-4xl font-semibold leading-[1.1] text-ivory sm:text-6xl lg:text-7xl">
-      {heroLines.map((line, i) => (
-        <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
-          {line}
-        </Reveal>
-      ))}
-    </h1>
+      <h1 class="relative font-display text-[2.75rem] font-semibold leading-[0.98] tracking-tight text-ivory sm:text-6xl lg:text-[5.5rem]">
+        {heroLines.map((line, i) => (
+          <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
+            {line}
+          </Reveal>
+        ))}
+      </h1>
 
-    <Reveal delay={3} class="mt-6 max-w-2xl text-lg text-ivory/75 sm:text-xl">
-      <p>{dict.home.heroSub}</p>
-    </Reveal>
+      <Reveal delay={3} class="relative mt-8 max-w-md text-lg leading-relaxed text-ivory/70">
+        <p>{dict.home.heroSub}</p>
+      </Reveal>
 
-    <Reveal delay={4} class="mt-10 flex flex-wrap items-center justify-center gap-4">
-      <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
-      <Button href={company.whatsappLink} variant="outline">{dict.cta.whatsapp}</Button>
+      <Reveal delay={4} class="relative mt-10 flex flex-wrap items-center gap-4">
+        <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
+        <Button href={company.whatsappLink} variant="ghost-light">{dict.cta.whatsapp}</Button>
+      </Reveal>
+    </div>
+
+    {/* Image column — bleeds to the outer edge, no container padding */}
+    <Reveal delay={2} class="relative min-h-[45vh] lg:min-h-screen">
+      <Image
+        src={heroImg}
+        alt=""
+        widths={[640, 960, 1400, 1800]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        loading="eager"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent lg:bg-linear-to-l lg:from-transparent lg:via-transparent lg:to-charcoal/10" aria-hidden="true"></div>
+      {/* Gold frame line, offset from the image edge — the one considered
+          decorative flourish, echoing the joinery-precision hairline motif
+          used across the site. */}
+      <div class="pointer-events-none absolute inset-6 border border-gold-light/25 sm:inset-8" aria-hidden="true"></div>
     </Reveal>
   </div>
+
+  <div class="h-px bg-gold/50" aria-hidden="true"></div>
 </section>
