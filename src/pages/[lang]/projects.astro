@@ -64,7 +64,7 @@ const lightboxSrcs = await Promise.all(
             type="button"
             data-filter="all"
             aria-pressed="true"
-            class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone-dark transition-colors duration-300"
+            class="gp-filter-pill inline-flex min-h-11 items-center rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone-dark transition-colors duration-300"
           >
             {dict.projects.filterAll}
           </button>
@@ -73,7 +73,7 @@ const lightboxSrcs = await Promise.all(
               type="button"
               data-filter={service.slug}
               aria-pressed="false"
-              class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone-dark transition-colors duration-300"
+              class="gp-filter-pill inline-flex min-h-11 items-center rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone-dark transition-colors duration-300"
             >
               {lang === 'ar' ? service.title.ar : service.title.en}
             </button>
@@ -91,18 +91,21 @@ const lightboxSrcs = await Promise.all(
           const title = lang === 'ar' ? project.title.ar : project.title.en;
           const location = lang === 'ar' ? project.location.ar : project.location.en;
           return (
-            <div class="mb-6 break-inside-avoid">
+            // The `mb-6 break-inside-avoid` wrapper is the filter/hidden target
+            // (not the inner button): the CSS multi-column masonry gap comes
+            // from THIS element's margin, so hiding the button alone left a
+            // phantom gap where this div's mb-6 still occupied layout space.
+            <div
+              class="gp-project-card mb-6 break-inside-avoid transition-[opacity,transform] duration-300"
+              data-project-card
+              data-category={project.category}
+              data-full-src={lightboxSrcs[i].src}
+              data-alt={title}
+              data-title={title}
+              data-location={location}
+            >
               <Reveal delay={((i % 6) + 1) as 1 | 2 | 3 | 4 | 5 | 6}>
-                <button
-                  type="button"
-                  data-project-card
-                  data-category={project.category}
-                  data-full-src={lightboxSrcs[i].src}
-                  data-alt={title}
-                  data-title={title}
-                  data-location={location}
-                  class="gp-project-card group block w-full text-start transition-[opacity,transform] duration-300"
-                >
+                <button type="button" class="group block w-full text-start">
                   <ArchImage
                     src={project.image}
                     alt={title}
@@ -244,6 +247,14 @@ const lightboxSrcs = await Promise.all(
   .gp-lightbox-btn svg {
     width: 1.25rem;
     height: 1.25rem;
+  }
+  /* The prev/next buttons are positioned with inset-inline-start/end so
+     they swap sides in RTL, but their chevron glyphs are hardcoded to a
+     single physical direction — mirror them in RTL so the button now on
+     the right (semantically "previous") still points the correct way. */
+  [dir='rtl'] .gp-lightbox-prev svg,
+  [dir='rtl'] .gp-lightbox-next svg {
+    transform: scaleX(-1);
   }
   .gp-lightbox-close {
     position: absolute;

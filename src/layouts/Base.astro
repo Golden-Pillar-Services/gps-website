@@ -17,9 +17,13 @@ const { lang, title, description, currentPath } = Astro.props;
 const dir = dirFor(lang);
 const dict = t(lang);
 const site = Astro.site ?? new URL('https://goldenpillar.om');
-const canonicalUrl = new URL(currentPath, site);
-const enUrl = new URL(currentPath.replace(/^\/(en|ar)/, '/en'), site);
-const arUrl = new URL(currentPath.replace(/^\/(en|ar)/, '/ar'), site);
+// The site is served with trailing slashes (see sitemap output); normalize
+// so canonical/hreflang URLs match instead of pointing at the no-slash form
+// that 301-redirects.
+const withTrailingSlash = (path: string) => (path.endsWith('/') ? path : `${path}/`);
+const canonicalUrl = new URL(withTrailingSlash(currentPath), site);
+const enUrl = new URL(withTrailingSlash(currentPath.replace(/^\/(en|ar)/, '/en')), site);
+const arUrl = new URL(withTrailingSlash(currentPath.replace(/^\/(en|ar)/, '/ar')), site);
 const ogImage = new URL('/og-image.png', site);
 
 // JSON-LD LocalBusiness schema — same facts as src/data/company.ts, read by

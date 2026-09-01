@@ -2,6 +2,12 @@
 @import '@fontsource-variable/fraunces';
 @import '@fontsource-variable/inter';
 @import '@fontsource/ibm-plex-sans-arabic';
+/* Fontsource's default import above ships weight 400 only. Headings use
+   font-semibold/bold, so pull in the real 600/700 weight files too —
+   otherwise Arabic headings are faux-bolded by the browser instead of using
+   actual bold glyphs. */
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+@import '@fontsource/ibm-plex-sans-arabic/700.css';
 
 @theme {
   --color-gold: #C9932B;

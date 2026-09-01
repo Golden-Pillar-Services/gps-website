@@ -87,7 +87,14 @@ const scopeItems = lang === 'ar' ? service.scope.ar : service.scope.en;
         </Reveal>
       </div>
       <Reveal delay={2}>
-        <ArchImage src={images[0]} alt={title} class="shadow-xl" loading="eager" />
+        <ArchImage
+          src={images[0]}
+          alt={title}
+          class="shadow-xl"
+          loading="eager"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          widths={[480, 800, 1200, 1600]}
+        />
       </Reveal>
     </div>
   </section>

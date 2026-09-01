@@ -50,6 +50,7 @@ const currentPath = localePath(lang, '/about');
           src={about1}
           alt={lang === 'ar' ? dict.about.storyTitle : dict.about.storyTitle}
           class="shadow-sm"
+          sizes="(min-width: 1024px) 50vw, 100vw"
         />
       </Reveal>
       <Reveal delay={1}>
@@ -91,7 +92,12 @@ const currentPath = localePath(lang, '/about');
   <section class="border-y border-gold/30 bg-sand">
     <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24">
       <Reveal>
-        <ArchImage src={about2} alt={dict.about.approachTitle} class="shadow-sm" />
+        <ArchImage
+          src={about2}
+          alt={dict.about.approachTitle}
+          class="shadow-sm"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+        />
       </Reveal>
       <Reveal delay={1}>
         <SectionHeading eyebrow={dict.about.approachTitle} title={dict.about.approachTitle} class="mb-6" />

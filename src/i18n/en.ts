@@ -10,6 +10,7 @@ export const en = {
     projects: 'Projects',
     contact: 'Contact',
     ariaLabel: 'Main navigation',
+    menu: 'Menu',
   },
 
   cta: {

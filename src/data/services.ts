@@ -11,8 +11,10 @@ export interface Service {
   scope: { en: string[]; ar: string[] };
   /** Four-step delivery process, in display order. */
   process: { en: string; ar: string }[];
-  /** PLACEHOLDER path — real image wired to an Astro asset in Task 5. */
-  heroImage: string;
+  // No shared imagery field here: per-service imagery is currently owned
+  // directly by each consuming page/component (services/index.astro,
+  // services/[slug].astro, FeaturedProjects.astro) rather than centralized
+  // here. Accepted tradeoff, not a bug — see fix-wave task 3.
 }
 
 // The four-step process is the same standard workflow across every trade.
@@ -50,7 +52,6 @@ export const services: Service[] = [
       ],
     },
     process,
-    heroImage: '/images/services/fitout-construction-hero.jpg', // PLACEHOLDER — wired to real asset in Task 5
   },
   {
     slug: 'cleaning-services',
@@ -74,7 +75,6 @@ export const services: Service[] = [
       ],
     },
     process,
-    heroImage: '/images/services/cleaning-services-hero.jpg', // PLACEHOLDER — wired to real asset in Task 5
   },
   {
     slug: 'joinery',
@@ -88,7 +88,6 @@ export const services: Service[] = [
       ar: ['الأبواب', 'الخزائن', 'المطابخ', 'الأثاث المخصص', 'أعمال النجارة التجارية'],
     },
     process,
-    heroImage: '/images/services/joinery-hero.jpg', // PLACEHOLDER — wired to real asset in Task 5
   },
   {
     slug: 'signage',
@@ -114,6 +113,5 @@ export const services: Service[] = [
       ],
     },
     process,
-    heroImage: '/images/services/signage-hero.jpg', // PLACEHOLDER — wired to real asset in Task 5
   },
 ];

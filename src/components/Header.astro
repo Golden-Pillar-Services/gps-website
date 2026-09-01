@@ -32,7 +32,7 @@ const isCurrent = (href: string) =>
 
 <header class="sticky top-0 z-50 border-b border-gold/20 bg-charcoal/90 backdrop-blur supports-[backdrop-filter]:bg-charcoal/75">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3 sm:px-6">
-    <a href={localePath(lang, '/')} class="shrink-0" aria-label={dict.nav.home}>
+    <a href={localePath(lang, '/')} class="shrink-0">
       <Fragment set:html={headerLogo} />
       <span class="sr-only">Golden Pillar Services</span>
     </a>
@@ -53,7 +53,7 @@ const isCurrent = (href: string) =>
       <LangSwitch lang={lang} currentPath={currentPath} />
       <a
         href={localePath(lang, '/contact')}
-        class="inline-flex items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
+        class="inline-flex min-h-11 items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
       >
         {dict.cta.getQuote}
       </a>
@@ -61,8 +61,8 @@ const isCurrent = (href: string) =>
 
     <details class="relative md:hidden">
       <summary
-        class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md text-ivory [&::-webkit-details-marker]:hidden [&::marker]:hidden"
-        aria-label={dict.nav.home}
+        class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-md text-ivory [&::-webkit-details-marker]:hidden [&::marker]:hidden"
+        aria-label={dict.nav.menu}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -86,7 +86,7 @@ const isCurrent = (href: string) =>
           <LangSwitch lang={lang} currentPath={currentPath} />
           <a
             href={localePath(lang, '/contact')}
-            class="inline-flex items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
+            class="inline-flex min-h-11 items-center rounded-full bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-gold-light"
           >
             {dict.cta.getQuote}
           </a>

@@ -83,6 +83,7 @@ const images: Record<ServiceSlug, ImageMetadata> = {
                   src={image}
                   alt={lang === 'ar' ? service.title.ar : service.title.en}
                   class="shadow-sm transition-shadow duration-500 group-hover:shadow-xl"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
                 />
               </a>
             </Reveal>

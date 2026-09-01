@@ -56,6 +56,11 @@ locales), artifacts saved to
 | Best Practices | 100 | 100 |
 | SEO | 100 | 100 |
 
+**Caveat:** these scores were only measured against the home page (`/en/`,
+`/ar/`) — not the other 12 page templates (services index/detail, about,
+projects, contact). Re-run Lighthouse across all page templates before
+launch to confirm scores hold sitewide.
+
 Site-authored JS (`src/scripts/*.ts`, uncompressed source): `counters.ts`
 2.2 KB, `projects.ts` 6.6 KB, `reveal.ts` 1.1 KB, `timeline.ts` 1.0 KB — total
 ~11 KB raw, well under the 20 KB-gzipped budget. Images are served as

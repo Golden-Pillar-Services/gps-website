@@ -29,8 +29,11 @@ const pillarGlyph = logoSquareRaw
 ---
 
 <div class="gp-timeline" data-timeline>
-  <div class="gp-timeline-rail" data-timeline-rail aria-hidden="true"></div>
-  <ol class="gp-timeline-list">
+  <ol class="gp-timeline-list" data-timeline-list>
+    {/* <li>, not <div> — <ol> only validly contains <li>/script-supporting
+       children. It's taken out of flow (position: absolute) below so it
+       still doesn't participate in the flex/grid item layout. */}
+    <li class="gp-timeline-rail" data-timeline-rail aria-hidden="true"></li>
     {
       milestones.map((m, i) => {
         const title = lang === 'ar' ? m.title.ar : m.title.en;
@@ -66,6 +69,7 @@ const pillarGlyph = logoSquareRaw
   }
 
   .gp-timeline-list {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
@@ -74,7 +78,14 @@ const pillarGlyph = logoSquareRaw
     padding: 0;
   }
 
-  /* --- Rail: mobile default is vertical, top-to-bottom (both languages) --- */
+  /* --- Rail: a child of the (potentially scrolling) <ol> itself, not the
+     outer .gp-timeline container, so it scrolls in lockstep with the
+     markers on desktop instead of staying pinned to the viewport-sized
+     outer box. Mobile default is vertical, top-to-bottom (both languages).
+     On desktop, JS (timeline.ts) measures the first/last marker positions
+     and sets an exact inline `left`/`width` spanning the full scrollable
+     content — the `calc(100% - 3rem)` below is just a no-JS/pre-hydration
+     fallback. */
   .gp-timeline-rail {
     position: absolute;
     inset-inline-start: 1.375rem;

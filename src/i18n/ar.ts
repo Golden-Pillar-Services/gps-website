@@ -12,6 +12,7 @@ export const ar: Dict = {
     projects: 'أعمالنا',
     contact: 'تواصل معنا',
     ariaLabel: 'التنقل الرئيسي',
+    menu: 'القائمة',
   },
 
   cta: {

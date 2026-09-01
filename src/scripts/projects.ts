@@ -180,7 +180,12 @@ export function initProjects(): void {
       const endX = e.changedTouches[0]?.clientX ?? touchStartX;
       const dx = endX - touchStartX;
       if (Math.abs(dx) < SWIPE_THRESHOLD) return;
-      handleDirection(dx < 0 ? 'left' : 'right');
+      // Touch swipe is a content-follows-finger gesture (iOS Photos,
+      // Instagram, etc.), which is the OPPOSITE mapping from the arrow-key
+      // physical-direction mapping above: a leftward drag should advance to
+      // the next image, not the previous one. Invert here only — keyboard
+      // nav via handleDirection('left'/'right') above stays untouched.
+      handleDirection(dx < 0 ? 'right' : 'left');
     },
     { passive: true },
   );
