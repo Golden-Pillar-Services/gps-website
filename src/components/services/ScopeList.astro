@@ -1,0 +1,29 @@
+---
+// Two-column scope-of-work checklist. Each item gets a small gold
+// pillar-bullet mark (two verticals + a crossbar, echoing the icon set)
+// instead of a plain dot or checkmark.
+interface Props {
+  items: string[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<ul class:list={['grid gap-x-8 gap-y-4 sm:grid-cols-2', className]}>
+  {items.map((item) => (
+    <li class="flex items-start gap-3">
+      <svg
+        viewBox="0 0 16 16"
+        class="mt-1 h-4 w-4 flex-shrink-0 text-gold"
+        fill="none"
+        aria-hidden="true"
+      >
+        <line x1="5" y1="2" x2="5" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <line x1="11" y1="2" x2="11" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span class="text-base text-ink">{item}</span>
+    </li>
+  ))}
+</ul>
