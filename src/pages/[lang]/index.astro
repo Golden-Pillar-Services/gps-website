@@ -2,6 +2,10 @@
 // TEMPORARY smoke-test page — verifies Base.astro renders correctly in both
 // languages. Replaced with the real home page in a later task.
 import Base from '../../layouts/Base.astro';
+import Reveal from '../../components/Reveal.astro';
+import Button from '../../components/Button.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Stat from '../../components/Stat.astro';
 import { langs, t, localePath } from '../../i18n';
 
 export function getStaticPaths() {
@@ -24,5 +28,44 @@ const currentPath = localePath(lang, '/');
       {dict.home.heroTitle}
     </h1>
     <p class="mt-6 text-lg text-stone">{dict.home.heroSub}</p>
+  </section>
+
+  {/* TEMPORARY: motion-system smoke test for Task 4. Remove once real
+      page-building tasks add their own reveal/counter/atom usage. */}
+  <section class="mx-auto max-w-4xl px-4 pb-24 sm:px-6">
+    <Reveal>
+      <SectionHeading
+        eyebrow="Motion system"
+        title="Blur scroll-reveal demo"
+        sub="This block, and the ones below it, fade + rise + blur-in as they enter the viewport."
+      />
+    </Reveal>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-3">
+      <Reveal delay={1} class="rounded-lg border border-gold/20 bg-sand/40 p-6">
+        <p class="text-sm text-stone">Card one — no stagger delay.</p>
+      </Reveal>
+      <Reveal delay={2} class="rounded-lg border border-gold/20 bg-sand/40 p-6">
+        <p class="text-sm text-stone">Card two — 160ms stagger.</p>
+      </Reveal>
+      <Reveal delay={3} class="rounded-lg border border-gold/20 bg-sand/40 p-6">
+        <p class="text-sm text-stone">Card three — 240ms stagger.</p>
+      </Reveal>
+    </div>
+
+    <Reveal delay={4} class="mt-12 grid gap-6 sm:grid-cols-3" as="div">
+      <Stat value={1240} label="Projects delivered" suffix="+" />
+      <Stat value={98} label="Client satisfaction" suffix="%" />
+      <Stat value={15} label="Years in Oman" />
+    </Reveal>
+
+    <Reveal delay={5} class="mt-12 flex flex-wrap items-center justify-center gap-4">
+      <Button href={localePath(lang, '/contact')} variant="gold">Gold button</Button>
+      <Button href={localePath(lang, '/contact')} variant="outline">Outline button</Button>
+    </Reveal>
+
+    <Reveal delay={6} class="mt-6 flex items-center justify-center rounded-lg bg-charcoal p-6">
+      <Button href={localePath(lang, '/contact')} variant="ghost-light">Ghost-light button</Button>
+    </Reveal>
   </section>
 </Base>

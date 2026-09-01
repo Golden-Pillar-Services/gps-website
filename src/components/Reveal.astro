@@ -1,0 +1,22 @@
+---
+// Thin wrapper that marks its children for the blur/fade/rise scroll-reveal
+// system (see src/scripts/reveal.ts + the [data-reveal] CSS in global.css).
+//
+// Usage:
+//   <Reveal><h2>Title</h2></Reveal>
+//   <Reveal delay={2} as="li">Staggered item</Reveal>
+interface Props {
+  /** Stagger step, 1-6, each step adds 80ms delay before revealing. */
+  delay?: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Wrapper element tag. Defaults to 'div'. */
+  as?: string;
+  class?: string;
+}
+
+const { delay, as = 'div', class: className } = Astro.props;
+const Tag = as as keyof HTMLElementTagNameMap;
+---
+
+<Tag data-reveal data-reveal-delay={delay} class={className}>
+  <slot />
+</Tag>

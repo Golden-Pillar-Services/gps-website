@@ -24,3 +24,24 @@ body { background: var(--color-ivory); color: var(--color-ink); }
 [dir='rtl'] body, [dir='rtl'] .font-display, [dir='rtl'] .font-sans {
   font-family: var(--font-arabic);
 }
+
+/* Scroll reveal: blur/fade/rise-in, triggered by src/scripts/reveal.ts.
+   Guarded by prefers-reduced-motion so reduced-motion users never see
+   elements stuck invisible — the JS also short-circuits and marks them
+   revealed immediately, but the CSS guard is the belt-and-braces layer. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+    transition:
+      opacity .7s cubic-bezier(.22,1,.36,1),
+      transform .7s cubic-bezier(.22,1,.36,1),
+      filter .7s cubic-bezier(.22,1,.36,1);
+  }
+  [data-reveal].revealed {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}

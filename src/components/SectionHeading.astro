@@ -1,0 +1,23 @@
+---
+// Shared section heading atom: gold hairline + uppercase eyebrow, a
+// Fraunces (font-display) title, and an optional supporting subtext.
+interface Props {
+  eyebrow?: string;
+  title: string;
+  sub?: string;
+  class?: string;
+}
+
+const { eyebrow, title, sub, class: className } = Astro.props;
+---
+
+<div class:list={['max-w-2xl', className]}>
+  {eyebrow && (
+    <div class="mb-3 flex items-center gap-3">
+      <span class="h-px w-8 bg-gold" aria-hidden="true"></span>
+      <span class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">{eyebrow}</span>
+    </div>
+  )}
+  <h2 class="font-display text-3xl font-semibold text-ink sm:text-4xl">{title}</h2>
+  {sub && <p class="mt-4 text-base text-stone sm:text-lg">{sub}</p>}
+</div>

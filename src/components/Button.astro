@@ -1,0 +1,55 @@
+---
+// Shared CTA button atom. Three variants:
+//   gold        — solid gold background, charcoal text (primary CTA)
+//   outline     — gold hairline border, gold text, fills gold on hover
+//   ghost-light — no fill, light (ivory) text for dark backgrounds, with a
+//                 gold underline-sweep revealed on hover
+interface Props {
+  href: string;
+  variant?: 'gold' | 'outline' | 'ghost-light';
+  class?: string;
+}
+
+const { href, variant = 'gold', class: className } = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-300';
+
+const variants: Record<string, string> = {
+  gold: 'bg-gold text-charcoal hover:bg-gold-light',
+  outline: 'border border-gold text-gold hover:bg-gold hover:text-charcoal',
+  'ghost-light': 'gp-btn-ghost text-ivory',
+};
+---
+
+<a href={href} class:list={[base, variants[variant], className]}>
+  <slot />
+</a>
+
+<style>
+  /* Gold underline-sweep on hover, for the ghost-light variant. */
+  .gp-btn-ghost {
+    position: relative;
+    padding-inline: 0.25rem;
+    border-radius: 0;
+  }
+  .gp-btn-ghost::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: var(--color-gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [dir='rtl'] .gp-btn-ghost::after {
+    transform-origin: right;
+  }
+  .gp-btn-ghost:hover::after,
+  .gp-btn-ghost:focus-visible::after {
+    transform: scaleX(1);
+  }
+</style>
