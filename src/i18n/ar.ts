@@ -1,6 +1,10 @@
 import type { Dict } from './index';
 
 export const ar: Dict = {
+  a11y: {
+    skipToContent: 'تخطَّ إلى المحتوى الرئيسي',
+  },
+
   nav: {
     home: 'الرئيسية',
     services: 'خدماتنا',

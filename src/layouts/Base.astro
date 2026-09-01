@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import { dirFor, type Lang } from '../i18n';
+import { dirFor, t, type Lang } from '../i18n';
+import { company } from '../data/company';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
@@ -14,11 +15,31 @@ interface Props {
 
 const { lang, title, description, currentPath } = Astro.props;
 const dir = dirFor(lang);
+const dict = t(lang);
 const site = Astro.site ?? new URL('https://goldenpillar.om');
 const canonicalUrl = new URL(currentPath, site);
 const enUrl = new URL(currentPath.replace(/^\/(en|ar)/, '/en'), site);
 const arUrl = new URL(currentPath.replace(/^\/(en|ar)/, '/ar'), site);
-const ogImage = new URL('/og-image.jpg', site);
+const ogImage = new URL('/og-image.png', site);
+
+// JSON-LD LocalBusiness schema — same facts as src/data/company.ts, read by
+// search engines / rich results rather than rendered on the page.
+const localBusinessJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: lang === 'ar' ? company.nameAr : company.nameEn,
+  image: ogImage.toString(),
+  telephone: company.phone,
+  email: company.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: company.address[lang],
+    addressLocality: 'Muscat',
+    addressCountry: 'OM',
+  },
+  areaServed: 'OM',
+  url: canonicalUrl.toString(),
+};
 ---
 
 <html lang={lang} dir={dir}>
@@ -45,10 +66,13 @@ const ogImage = new URL('/og-image.jpg', site);
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
   </head>
   <body class="bg-ivory text-ink">
+    <a href="#main-content" class="skip-link">{dict.a11y.skipToContent}</a>
     <Header lang={lang} currentPath={currentPath} />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer lang={lang} />

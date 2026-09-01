@@ -10,7 +10,10 @@
   --color-ink: #1A1917;
   --color-ivory: #FAF7F0;
   --color-sand: #EFE7D8;
-  --color-stone: #8A8578;
+  /* Darkened from the original #8A8578 to clear WCAG AA (4.5:1) for normal
+     body text on both --color-ivory and --color-sand — the original only
+     cleared the 3:1 large-text threshold (see task 11 accessibility pass). */
+  --color-stone: #6B6656;
 
   --font-display: 'Fraunces Variable', Georgia, serif;
   --font-sans: 'Inter Variable', system-ui, sans-serif;
@@ -19,6 +22,34 @@
 
 html { scroll-behavior: smooth; }
 body { background: var(--color-ivory); color: var(--color-ink); }
+
+/* Consistent keyboard-focus indicator across the site: a gold outline with
+   a little offset so it never gets clipped by rounded corners or tight
+   line-height. Mouse/touch users never see it (focus-visible only). */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip-to-content link: visually hidden until focused, then pinned to the
+   top-start corner above everything else. */
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -3rem;
+  z-index: 100;
+  background: var(--color-gold);
+  color: var(--color-charcoal);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
 
 /* Arabic pages: swap font stack wholesale */
 [dir='rtl'] body, [dir='rtl'] .font-display, [dir='rtl'] .font-sans {

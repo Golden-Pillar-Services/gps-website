@@ -6,9 +6,12 @@ interface Props {
   title: string;
   sub?: string;
   class?: string;
+  /** Heading level to render for the title. Defaults to h2; pass "h1" when
+   * this SectionHeading is a page's single top-level heading. */
+  as?: 'h1' | 'h2';
 }
 
-const { eyebrow, title, sub, class: className } = Astro.props;
+const { eyebrow, title, sub, class: className, as: Tag = 'h2' } = Astro.props;
 ---
 
 <div class:list={['max-w-2xl', className]}>
@@ -18,6 +21,6 @@ const { eyebrow, title, sub, class: className } = Astro.props;
       <span class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">{eyebrow}</span>
     </div>
   )}
-  <h2 class="font-display text-3xl font-semibold text-ink sm:text-4xl">{title}</h2>
+  <Tag class="font-display text-3xl font-semibold text-ink sm:text-4xl">{title}</Tag>
   {sub && <p class="mt-4 text-base text-stone sm:text-lg">{sub}</p>}
 </div>

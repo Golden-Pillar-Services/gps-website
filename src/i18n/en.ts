@@ -1,4 +1,8 @@
 export const en = {
+  a11y: {
+    skipToContent: 'Skip to main content',
+  },
+
   nav: {
     home: 'Home',
     services: 'Services',
