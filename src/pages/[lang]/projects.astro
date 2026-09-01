@@ -1,0 +1,279 @@
+---
+// Projects gallery: category filter pills over a responsive masonry-ish
+// grid, each card opening a native <dialog> lightbox with keyboard/swipe
+// navigation between images.
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import Reveal from '../../components/Reveal.astro';
+import ArchImage from '../../components/ArchImage.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { langs, t, localePath, type Lang } from '../../i18n';
+import { services } from '../../data/services';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return langs.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const dict = t(lang);
+const currentPath = localePath(lang, '/projects');
+
+const categoryLabel: Record<string, string> = Object.fromEntries(
+  services.map((s) => [s.slug, lang === 'ar' ? s.title.ar : s.title.en]),
+);
+
+// Full-size (lightbox) rendition of each project photo, built once at
+// build time so the client only ever swaps an <img> src.
+const lightboxSrcs = await Promise.all(
+  projects.map((p) => getImage({ src: p.image, width: 1600, format: 'webp' })),
+);
+---
+
+<Base lang={lang} title={dict.projects.title} description={dict.projects.sub} currentPath={currentPath}>
+  {/* Hero */}
+  <section class="border-b border-gold/30 bg-sand">
+    <div class="mx-auto max-w-4xl px-4 py-24 text-center sm:px-6">
+      <Reveal>
+        <SectionHeading
+          eyebrow={dict.nav.projects}
+          title={dict.projects.title}
+          sub={dict.projects.sub}
+          class="mx-auto text-center"
+        />
+      </Reveal>
+    </div>
+  </section>
+
+  {/* Filter + grid */}
+  <section class="bg-ivory">
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
+      <Reveal>
+        <div
+          class="flex flex-wrap justify-center gap-3"
+          role="group"
+          aria-label={dict.projects.title}
+        >
+          <button
+            type="button"
+            data-filter="all"
+            aria-pressed="true"
+            class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone transition-colors duration-300"
+          >
+            {dict.projects.filterAll}
+          </button>
+          {services.map((service) => (
+            <button
+              type="button"
+              data-filter={service.slug}
+              aria-pressed="false"
+              class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone transition-colors duration-300"
+            >
+              {lang === 'ar' ? service.title.ar : service.title.en}
+            </button>
+          ))}
+        </div>
+      </Reveal>
+
+      <p class="sr-only" role="status" data-filter-status></p>
+
+      <div
+        class="mt-14 columns-1 gap-6 sm:columns-2 lg:columns-3"
+        data-project-grid
+      >
+        {projects.map((project, i) => {
+          const title = lang === 'ar' ? project.title.ar : project.title.en;
+          const location = lang === 'ar' ? project.location.ar : project.location.en;
+          return (
+            <div class="mb-6 break-inside-avoid">
+              <Reveal delay={((i % 6) + 1) as 1 | 2 | 3 | 4 | 5 | 6}>
+                <button
+                  type="button"
+                  data-project-card
+                  data-category={project.category}
+                  data-full-src={lightboxSrcs[i].src}
+                  data-alt={title}
+                  data-title={title}
+                  data-location={location}
+                  class="gp-project-card group block w-full text-start transition-[opacity,transform] duration-300"
+                >
+                  <ArchImage
+                    src={project.image}
+                    alt={title}
+                    loading={i < 4 ? 'eager' : 'lazy'}
+                    class="shadow-sm transition-shadow duration-500 group-hover:shadow-xl"
+                  />
+                  <div class="mt-4 px-1">
+                    <h3 class="font-display text-lg font-semibold text-ink">{title}</h3>
+                    <p class="mt-1 text-sm font-medium text-gold">{categoryLabel[project.category]}</p>
+                    <p class="mt-1 text-sm text-stone">{location}</p>
+                  </div>
+                </button>
+              </Reveal>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+
+  {/* Lightbox */}
+  <dialog data-lightbox class="gp-lightbox" aria-label={dict.projects.title}>
+    <div class="gp-lightbox-inner">
+      <button type="button" data-lightbox-close class="gp-lightbox-btn gp-lightbox-close" aria-label={dict.projects.lightboxClose}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="5" y1="5" x2="19" y2="19" />
+          <line x1="19" y1="5" x2="5" y2="19" />
+        </svg>
+      </button>
+
+      <button type="button" data-lightbox-prev class="gp-lightbox-btn gp-lightbox-prev" aria-label={dict.projects.lightboxPrev}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      <button type="button" data-lightbox-next class="gp-lightbox-btn gp-lightbox-next" aria-label={dict.projects.lightboxNext}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
+      <figure class="gp-lightbox-figure">
+        <img data-lightbox-image src="" alt="" />
+        <figcaption class="gp-lightbox-caption">
+          <span data-lightbox-title class="block font-display text-lg font-semibold text-ivory"></span>
+          <span data-lightbox-location class="mt-1 block text-sm text-ivory/70"></span>
+        </figcaption>
+      </figure>
+    </div>
+  </dialog>
+
+  <script>
+    import { initProjects } from '../../scripts/projects';
+    initProjects();
+  </script>
+</Base>
+
+<style>
+  .gp-filter-pill[aria-pressed='true'] {
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+    border-color: var(--color-gold);
+  }
+  .gp-filter-pill[aria-pressed='false']:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+
+  .gp-project-card.is-hidden {
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gp-project-card {
+      transition: none;
+    }
+  }
+
+  /* Lightbox: native <dialog>, styled full-viewport with a dimmed
+     backdrop; the inner figure is centered and capped in size. */
+  .gp-lightbox {
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .gp-lightbox::backdrop {
+    background: color-mix(in srgb, var(--color-ink) 92%, transparent);
+  }
+  .gp-lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gp-lightbox-inner {
+    position: relative;
+    width: min(90vw, 1100px);
+    max-height: 90vh;
+  }
+  .gp-lightbox-figure {
+    margin: 0;
+  }
+  .gp-lightbox-figure img {
+    display: block;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    border-radius: 0.75rem;
+  }
+  .gp-lightbox-caption {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .gp-lightbox-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ivory);
+    background: color-mix(in srgb, var(--color-ink) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-ivory) 20%, transparent);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .gp-lightbox-btn:hover,
+  .gp-lightbox-btn:focus-visible {
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+  }
+  .gp-lightbox-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .gp-lightbox-close {
+    position: absolute;
+    inset-block-start: -3.25rem;
+    inset-inline-end: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .gp-lightbox-prev,
+  .gp-lightbox-next {
+    position: absolute;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+  }
+  .gp-lightbox-prev {
+    inset-inline-start: -1rem;
+  }
+  .gp-lightbox-next {
+    inset-inline-end: -1rem;
+  }
+  @media (max-width: 640px) {
+    .gp-lightbox-inner {
+      width: 92vw;
+    }
+    .gp-lightbox-prev {
+      inset-inline-start: 0;
+    }
+    .gp-lightbox-next {
+      inset-inline-end: 0;
+    }
+  }
+</style>
