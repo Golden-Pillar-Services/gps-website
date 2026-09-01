@@ -64,7 +64,7 @@ const lightboxSrcs = await Promise.all(
             type="button"
             data-filter="all"
             aria-pressed="true"
-            class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone transition-colors duration-300"
+            class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone-dark transition-colors duration-300"
           >
             {dict.projects.filterAll}
           </button>
@@ -73,7 +73,7 @@ const lightboxSrcs = await Promise.all(
               type="button"
               data-filter={service.slug}
               aria-pressed="false"
-              class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone transition-colors duration-300"
+              class="gp-filter-pill rounded-full border border-gold/40 px-5 py-2 text-sm font-medium text-stone-dark transition-colors duration-300"
             >
               {lang === 'ar' ? service.title.ar : service.title.en}
             </button>
@@ -112,7 +112,7 @@ const lightboxSrcs = await Promise.all(
                   <div class="mt-4 px-1">
                     <h3 class="font-display text-lg font-semibold text-ink">{title}</h3>
                     <p class="mt-1 text-sm font-medium text-gold">{categoryLabel[project.category]}</p>
-                    <p class="mt-1 text-sm text-stone">{location}</p>
+                    <p class="mt-1 text-sm text-stone-dark">{location}</p>
                   </div>
                 </button>
               </Reveal>

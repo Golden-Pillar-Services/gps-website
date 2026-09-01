@@ -10,10 +10,15 @@
   --color-ink: #1A1917;
   --color-ivory: #FAF7F0;
   --color-sand: #EFE7D8;
-  /* Darkened from the original #8A8578 to clear WCAG AA (4.5:1) for normal
-     body text on both --color-ivory and --color-sand — the original only
-     cleared the 3:1 large-text threshold (see task 11 accessibility pass). */
-  --color-stone: #6B6656;
+  /* Exact spec value — kept as-is for large/decorative stone usage. It only
+     clears the 3:1 AA-large contrast threshold on ivory/sand, not the 4.5:1
+     normal-text threshold, so body/caption-size text uses --color-stone-dark
+     below instead (see task 11 accessibility pass). */
+  --color-stone: #8A8578;
+  /* Darkened variant for body- and caption-size text on ivory/sand — clears
+     WCAG AA 4.5:1 (5.36:1 on ivory, 4.67:1 on sand) where the original
+     --color-stone (3.44:1 on ivory) does not. */
+  --color-stone-dark: #6B6656;
 
   --font-display: 'Fraunces Variable', Georgia, serif;
   --font-sans: 'Inter Variable', system-ui, sans-serif;
