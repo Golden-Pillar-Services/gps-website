@@ -1,0 +1,38 @@
+---
+// Small mono badge reading a real site coordinate or reference — a
+// surveyor's location tag, gold ink on a thin gold-bordered box.
+interface Props {
+  text: string;
+  class?: string;
+  /** Light-surface variant — for use on ivory/sand cards instead of a
+   * photo. Defaults to the dark/on-photo styling. */
+  light?: boolean;
+  /** Force the text LTR — only for genuinely numeric coordinate strings
+   * (e.g. "23.5880° N, 58.4059° E"). Never set this for a real Arabic
+   * place name (e.g. a project's Arabic location string), which must
+   * render in its own natural direction. */
+  numeric?: boolean;
+}
+
+const { text, class: className, light = false, numeric = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'inline-flex items-center gap-1.5 border px-2 py-1 font-mono text-[0.65rem] tracking-wide backdrop-blur-sm',
+    light
+      ? 'border-gold/40 bg-transparent text-stone-dark'
+      : 'border-gold-light/50 bg-charcoal/70 text-gold-light',
+    className,
+  ]}
+>
+  <svg viewBox="0 0 12 12" class="h-2.5 w-2.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+    <circle cx="6" cy="6" r="1.4" />
+    <circle cx="6" cy="6" r="4.5" />
+  </svg>
+  {/* dir="ltr" only for numeric coordinate strings, so the digits/symbols
+      read in a consistent order regardless of page direction — standard
+      practice for numeric data embedded in RTL text. A real place name
+      (Arabic or English) keeps its natural direction. */}
+  {numeric ? <span dir="ltr">{text}</span> : <span>{text}</span>}
+</div>

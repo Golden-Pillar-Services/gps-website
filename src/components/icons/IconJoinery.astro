@@ -1,7 +1,8 @@
 ---
-// Joinery icon: pillar strokes + dovetail-notch details cut into the
-// centre pillar, echoing the logo's vertical pillar-stroke geometry with a
-// joinery craft detail.
+// Joinery icon, redrawn in technical-drawing grammar: a section-view
+// panel outline with a dovetail joint detail (real joinery construction
+// technique, not a generic craft flourish) and dimension ticks — reads
+// as a shop drawing detail, not an icon-pack glyph.
 interface Props {
   class?: string;
 }
@@ -15,19 +16,17 @@ const { class: className } = Astro.props;
   class={className}
   aria-hidden="true"
 >
-  <line x1="15" y1="10" x2="15" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Panel section outline -->
+  <rect x="10" y="10" width="28" height="28" stroke="currentColor" stroke-width="1.5" />
+  <!-- Dovetail joint detail (real joinery technique) -->
   <path
-    d="M24,8 L24,17 L20,20 L24,23 L24,25 L20,28 L24,31 L24,40"
+    d="M10 20 L16 20 L18 17 L20 20 L22 20 L22 28 L20 28 L18 31 L16 28 L10 28"
     stroke="currentColor"
     stroke-width="1.5"
-    stroke-linecap="round"
     stroke-linejoin="round"
   />
-  <line x1="33" y1="10" x2="33" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="11" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="11" y1="38" x2="19" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="29" y1="10" x2="37" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="29" y1="38" x2="37" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <path d="M28,20 L31,20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <path d="M28,28 L31,28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Dimension line + ticks below the panel -->
+  <line x1="10" y1="42" x2="38" y2="42" stroke="currentColor" stroke-width="1" />
+  <line x1="10" y1="44" x2="10" y2="40" stroke="currentColor" stroke-width="1" />
+  <line x1="38" y1="44" x2="38" y2="40" stroke="currentColor" stroke-width="1" />
 </svg>

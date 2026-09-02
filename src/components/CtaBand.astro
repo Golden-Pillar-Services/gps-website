@@ -14,6 +14,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const dict = t(lang);
+const today = new Date();
 ---
 
 <section class="relative overflow-hidden border-t border-gold/30 bg-charcoal">
@@ -21,13 +22,8 @@ const dict = t(lang);
     <span class="absolute start-0 top-0 h-7 w-7 border-t-2 border-s-2 border-gold-light/30"></span>
     <span class="absolute end-0 bottom-0 h-7 w-7 border-b-2 border-e-2 border-gold-light/30"></span>
   </div>
-  <div class="relative mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
-    <Reveal class="mb-4 flex items-center justify-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-gold-light/80">
-      <span class="h-px w-8 bg-gold-light/60" aria-hidden="true"></span>
-      {lang === 'ar' ? company.nameAr : company.nameEn}
-      <span class="h-px w-8 bg-gold-light/60" aria-hidden="true"></span>
-    </Reveal>
-    <Reveal delay={1}>
+  <div class="relative mx-auto max-w-3xl px-4 pt-24 text-center sm:px-6">
+    <Reveal>
       <h2 class="font-display text-3xl font-semibold text-ivory sm:text-4xl">
         {dict.home.ctaBand.title}
       </h2>
@@ -41,5 +37,14 @@ const dict = t(lang);
       <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
       <Button href={company.whatsappLink} variant="outline">{dict.cta.whatsapp}</Button>
     </Reveal>
+  </div>
+
+  {/* Sheet footer — closes the title-block system every page hero opens
+      with, rather than a centered eyebrow repeating the company name. */}
+  <div class="relative mt-16 border-t border-gold-light/20">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-4 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-gold-light/60 sm:px-6">
+      <span>{lang === 'ar' ? company.nameAr : company.nameEn}</span>
+      <span>{lang === 'ar' ? `مراجعة ${today.getFullYear()}` : `REV. ${today.getFullYear()}`}</span>
+    </div>
   </div>
 </section>

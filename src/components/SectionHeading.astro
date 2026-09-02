@@ -1,8 +1,13 @@
 ---
-// Shared section heading atom: gold hairline + uppercase eyebrow, a
-// Fraunces (font-display) title, and an optional supporting subtext.
+// Shared section heading atom: a Fraunces (font-display) title and an
+// optional supporting subtext. No eyebrow/kicker here deliberately — the
+// survey/blueprint motifs (title block, coordinate tag, dimension line)
+// are this site's one recurring "technical label" device, used on page
+// heroes; putting a tracked mono eyebrow above every single section on
+// top of that would be exactly the over-used-eyebrow pattern DESIGN.md
+// and the design floor both call out. Section rhythm instead comes from
+// the survey motifs used sparingly plus plain, confident typography.
 interface Props {
-  eyebrow?: string;
   title: string;
   sub?: string;
   class?: string;
@@ -13,23 +18,10 @@ interface Props {
   dark?: boolean;
 }
 
-const { eyebrow, title, sub, class: className, as: Tag = 'h2', dark = false } = Astro.props;
+const { title, sub, class: className, as: Tag = 'h2', dark = false } = Astro.props;
 ---
 
 <div class:list={['max-w-2xl', className]}>
-  {eyebrow && (
-    <div class="mb-3 flex items-center gap-3">
-      <span class:list={['h-px w-8', dark ? 'bg-gold-light/70' : 'bg-gold']} aria-hidden="true"></span>
-      <span
-        class:list={[
-          'font-mono text-[0.7rem] uppercase tracking-[0.18em]',
-          dark ? 'text-gold-light/90' : 'text-gold',
-        ]}
-      >
-        {eyebrow}
-      </span>
-    </div>
-  )}
   <Tag class:list={['font-display text-3xl font-semibold sm:text-4xl', dark ? 'text-ivory' : 'text-ink']}>
     {title}
   </Tag>

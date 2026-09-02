@@ -1,0 +1,34 @@
+---
+// Survey/blueprint dimension line: a thin gold line with perpendicular
+// arrow ticks at each end and an optional mono measurement label at its
+// midpoint, annotating a real photo the way a drawing measures a plan.
+// Caller positions it via `class` (absolute + inset utilities); this
+// component only draws the line itself, horizontal or vertical.
+interface Props {
+  orientation?: 'horizontal' | 'vertical';
+  label?: string;
+  class?: string;
+}
+
+const { orientation = 'horizontal', label, class: className } = Astro.props;
+const isH = orientation === 'horizontal';
+---
+
+<div
+  class:list={[
+    'pointer-events-none flex items-center text-gold-light',
+    isH ? 'w-full flex-row' : 'h-full flex-col',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <span class:list={[isH ? 'h-2 w-px' : 'h-px w-2', 'shrink-0 bg-current']}></span>
+  <span class:list={[isH ? 'h-px flex-1' : 'w-px flex-1', 'bg-current']}></span>
+  {label && (
+    <span class="shrink-0 whitespace-nowrap bg-charcoal px-1.5 py-0.5 font-mono text-[0.65rem] tracking-wide text-gold-light">
+      {label}
+    </span>
+  )}
+  <span class:list={[isH ? 'h-px flex-1' : 'w-px flex-1', 'bg-current']}></span>
+  <span class:list={[isH ? 'h-2 w-px' : 'h-px w-2', 'shrink-0 bg-current']}></span>
+</div>

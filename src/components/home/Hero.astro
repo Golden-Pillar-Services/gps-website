@@ -1,15 +1,17 @@
 ---
-// Home page hero, v2: full-bleed site photograph as the entire canvas
-// (not a 50/50 split), heavy bottom-weighted gradient, text anchored low
-// rather than centered, a monospace "spec sheet" label row + corner
-// registration marks for a precision/engineered feel, and one italic
-// word in the headline for emphasis — closer to the bold, dark, textured
-// reference direction than the earlier split-hero version.
+// Home page hero — Survey Line direction (see DESIGN.md direction
+// contract). Full-bleed real jobsite photo, annotated like a surveyed
+// site: a coordinate tag, a pure-graphic dimension line, a scale bar,
+// corner registration marks, and the headline rendered inside a drawing
+// title-block (mono sheet/rev meta-row above the actual heading) rather
+// than a plain centered or split hero.
 import { t, localePath, type Lang } from '../../i18n';
 import { company } from '../../data/company';
-import { services } from '../../data/services';
 import Reveal from '../Reveal.astro';
 import Button from '../Button.astro';
+import DimensionLine from '../survey/DimensionLine.astro';
+import CoordinateTag from '../survey/CoordinateTag.astro';
+import ScaleBar from '../survey/ScaleBar.astro';
 import { Image } from 'astro:assets';
 import heroImg from '../../assets/img/hero-fitout.jpg';
 
@@ -20,11 +22,8 @@ interface Props {
 const { lang } = Astro.props;
 const dict = t(lang);
 const heroLines = dict.home.heroTitle.split('\n');
-const specLabel = [
-  lang === 'ar' ? 'سلطنة عُمان' : 'OMAN',
-  lang === 'ar' ? 'تأسست 2012' : 'EST. 2012',
-  services.map((s) => (lang === 'ar' ? s.title.ar : s.title.en)).join(' / '),
-].join('  ·  ');
+const today = new Date();
+const revLabel = `${lang === 'ar' ? 'مراجعة' : 'REV.'} ${today.getFullYear()}`;
 ---
 
 <section class="relative min-h-screen overflow-hidden bg-charcoal">
@@ -36,13 +35,9 @@ const specLabel = [
     loading="eager"
     class="absolute inset-0 h-full w-full object-cover"
   />
-  {/* Bottom-weighted gradient — photo stays clearly visible in the top
-      third, darkens enough behind the text block (roughly the bottom
-      two-thirds) for guaranteed contrast against busy site photography. */}
-  <div class="absolute inset-0 bg-linear-to-t from-charcoal from-10% via-charcoal/90 via-45% to-transparent to-85%" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-linear-to-t from-charcoal from-10% via-charcoal/85 via-42% to-charcoal/10" aria-hidden="true"></div>
 
-  {/* Corner registration marks — a precision/blueprint device instead of
-      a decorative flourish, reinforcing "measured, engineered work". */}
+  {/* Corner registration marks */}
   <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
     <span class="absolute start-0 top-0 h-8 w-8 border-t-2 border-s-2 border-gold-light/60"></span>
     <span class="absolute end-0 top-0 h-8 w-8 border-t-2 border-e-2 border-gold-light/60"></span>
@@ -50,31 +45,49 @@ const specLabel = [
     <span class="absolute end-0 bottom-0 h-8 w-8 border-b-2 border-e-2 border-gold-light/60"></span>
   </div>
 
-  <div class="relative flex min-h-screen flex-col justify-end px-6 pb-16 pt-32 sm:px-10 sm:pb-20 lg:px-16 lg:pb-24">
-    <Reveal class="mb-5 flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-gold-light/90 sm:text-xs">
-      <span class="h-px w-8 bg-gold-light/70" aria-hidden="true"></span>
-      <span>{specLabel}</span>
-    </Reveal>
+  {/* Coordinate tag — real Muscat coordinates */}
+  <Reveal class="absolute end-8 top-24 hidden sm:end-12 sm:top-28 sm:block">
+    <CoordinateTag text="23.5880° N, 58.4059° E" numeric />
+  </Reveal>
 
-    <h1 class="max-w-4xl font-display text-[3rem] font-semibold leading-[0.95] tracking-tight text-ivory drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)] sm:text-7xl lg:text-[6.5rem]">
-      {heroLines.map((line, i) => (
-        <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
-          {i === heroLines.length - 1 ? (
-            // Arabic has no italic glyphs — browsers fake-slant it, which
-            // reads as broken. Emphasis stays color-only in Arabic.
-            <em class:list={['not-italic text-gold-light', lang === 'en' && 'italic']}>{line}</em>
-          ) : line}
-        </Reveal>
-      ))}
-    </h1>
+  {/* Dimension line annotating the photo, labeled with what the photo
+      honestly shows (not a fabricated measurement — see DESIGN.md: never
+      invent a technical claim the line could be mistaken for). */}
+  <div class="pointer-events-none absolute inset-x-10 top-[38%] hidden sm:block" aria-hidden="true">
+    <DimensionLine orientation="horizontal" label={lang === 'ar' ? 'أعمال إنشائية جارية' : 'STRUCTURAL WORKS — IN PROGRESS'} />
+  </div>
 
-    <Reveal delay={3} class="mt-7 max-w-lg text-lg leading-relaxed text-ivory/75">
-      <p>{dict.home.heroSub}</p>
-    </Reveal>
+  <ScaleBar lang={lang} class="absolute bottom-6 start-6 hidden sm:bottom-10 sm:start-10 sm:flex" />
 
-    <Reveal delay={4} class="mt-9 flex flex-wrap items-center gap-4">
-      <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
-      <Button href={company.whatsappLink} variant="ghost-light">{dict.cta.whatsapp}</Button>
+  <div class="relative flex min-h-screen flex-col justify-end px-5 pb-16 pt-32 sm:px-10 sm:pb-20 lg:px-16 lg:pb-24">
+    {/* Title block: mono meta-row + gold rule + headline, framed like a
+        real drawing's title block rather than plain floating text. */}
+    <Reveal class="max-w-3xl border border-gold-light/35 bg-charcoal/60 p-5 backdrop-blur-sm sm:p-8">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-gold-light/85 sm:text-xs">
+        <span>{lang === 'ar' ? 'لوحة 01 — الرئيسية' : 'SHEET 01 — HOME'}</span>
+        <span class="text-gold-light/40">/</span>
+        <span>{revLabel}</span>
+        <span class="text-gold-light/40">/</span>
+        <span>{lang === 'ar' ? company.nameAr : company.nameEn}</span>
+      </div>
+      <div class="mt-3 h-px w-full bg-gold-light/30" aria-hidden="true"></div>
+
+      <h1 class="mt-4 font-display text-[2.5rem] font-semibold leading-[1] tracking-tight text-ivory sm:text-6xl lg:text-7xl">
+        {heroLines.map((line, i) => (
+          <Reveal as="span" delay={(i === 0 ? 1 : 2) as 1 | 2} class="block">
+            {i === heroLines.length - 1 ? <span class="text-gold-light">{line}</span> : line}
+          </Reveal>
+        ))}
+      </h1>
+
+      <Reveal delay={3} class="mt-5 max-w-lg text-base leading-relaxed text-ivory/70 sm:text-lg">
+        <p>{dict.home.heroSub}</p>
+      </Reveal>
+
+      <Reveal delay={4} class="mt-7 flex flex-wrap items-center gap-4">
+        <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
+        <Button href={company.whatsappLink} variant="ghost-light">{dict.cta.whatsapp}</Button>
+      </Reveal>
     </Reveal>
   </div>
 

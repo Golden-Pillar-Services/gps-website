@@ -1,25 +1,33 @@
 ---
-// Shared dark page-hero: full-bleed photo, heavy bottom gradient, corner
-// registration marks, monospace eyebrow label — the same language as the
-// home hero, reused by every secondary page so light-centered "template"
-// heroes don't come back page by page.
+// Shared dark page-hero — Survey Line direction (see DESIGN.md): full-
+// bleed real photo, corner registration marks, a coordinate tag, and the
+// heading rendered inside a drawing title-block (mono sheet/rev meta-row
+// above the actual heading), matching the home hero's language instead
+// of each secondary page carrying its own centered "template" hero.
 import { type Lang } from '../i18n';
+import { company } from '../data/company';
 import Reveal from './Reveal.astro';
+import CoordinateTag from './survey/CoordinateTag.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
   lang: Lang;
+  /** Page name for the title-block meta row, e.g. "ABOUT". */
   eyebrow: string;
+  /** Two-digit sheet number distinguishing this page, e.g. "02". */
+  sheetNo: string;
   title: string;
   sub?: string;
   image: ImageMetadata;
 }
 
-const { eyebrow, title, sub, image } = Astro.props;
+const { lang, eyebrow, sheetNo, title, sub, image } = Astro.props;
+const today = new Date();
+const revLabel = `${lang === 'ar' ? 'مراجعة' : 'REV.'} ${today.getFullYear()}`;
 ---
 
-<section class="relative min-h-[60vh] overflow-hidden bg-charcoal sm:min-h-[65vh]">
+<section class="relative min-h-[65vh] overflow-hidden bg-charcoal sm:min-h-[70vh]">
   <Image
     src={image}
     alt=""
@@ -28,28 +36,39 @@ const { eyebrow, title, sub, image } = Astro.props;
     loading="eager"
     class="absolute inset-0 h-full w-full object-cover"
   />
-  <div class="absolute inset-0 bg-linear-to-t from-charcoal from-15% via-charcoal/85 via-55% to-charcoal/30" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-linear-to-t from-charcoal from-12% via-charcoal/85 via-48% to-charcoal/15" aria-hidden="true"></div>
 
   <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
     <span class="absolute start-0 top-0 h-7 w-7 border-t-2 border-s-2 border-gold-light/50"></span>
     <span class="absolute end-0 top-0 h-7 w-7 border-t-2 border-e-2 border-gold-light/50"></span>
+    <span class="absolute start-0 bottom-0 h-7 w-7 border-b-2 border-s-2 border-gold-light/50"></span>
+    <span class="absolute end-0 bottom-0 h-7 w-7 border-b-2 border-e-2 border-gold-light/50"></span>
   </div>
 
-  <div class="relative flex min-h-[60vh] flex-col justify-end px-6 pb-16 pt-28 sm:min-h-[65vh] sm:px-10 lg:px-16">
-    <Reveal class="mb-4 flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-gold-light/90">
-      <span class="h-px w-8 bg-gold-light/70" aria-hidden="true"></span>
-      <span>{eyebrow}</span>
-    </Reveal>
-    <Reveal delay={1}>
-      <h1 class="max-w-2xl font-display text-4xl font-semibold leading-[1.02] tracking-tight text-ivory drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)] sm:text-6xl">
+  <Reveal class="absolute end-8 top-24 hidden sm:end-12 sm:top-28 sm:block">
+    <CoordinateTag text="23.5880° N, 58.4059° E" numeric />
+  </Reveal>
+
+  <div class="relative flex min-h-[65vh] flex-col justify-end px-5 pb-14 pt-28 sm:min-h-[70vh] sm:px-10 lg:px-16">
+    <Reveal class="max-w-2xl border border-gold-light/35 bg-charcoal/60 p-5 backdrop-blur-sm sm:p-7">
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-gold-light/85 sm:text-xs">
+        <span>{lang === 'ar' ? `لوحة ${sheetNo}` : `SHEET ${sheetNo}`} — {eyebrow}</span>
+        <span class="text-gold-light/40">/</span>
+        <span>{revLabel}</span>
+        <span class="text-gold-light/40">/</span>
+        <span>{lang === 'ar' ? company.nameAr : company.nameEn}</span>
+      </div>
+      <div class="mt-3 h-px w-full bg-gold-light/30" aria-hidden="true"></div>
+
+      <h1 class="mt-4 font-display text-3xl font-semibold leading-[1.02] tracking-tight text-ivory sm:text-5xl">
         {title}
       </h1>
+      {sub && (
+        <Reveal delay={1} class="mt-4 max-w-lg text-base text-ivory/70 sm:text-lg">
+          <p>{sub}</p>
+        </Reveal>
+      )}
     </Reveal>
-    {sub && (
-      <Reveal delay={2} class="mt-5 max-w-lg text-base text-ivory/75 sm:text-lg">
-        <p>{sub}</p>
-      </Reveal>
-    )}
   </div>
 
   <div class="absolute inset-x-0 bottom-0 h-px bg-gold/50" aria-hidden="true"></div>

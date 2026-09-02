@@ -25,7 +25,7 @@ const currentPath = localePath(lang, '/contact');
 ---
 
 <Base lang={lang} title={dict.contact.title} description={dict.contact.sub} currentPath={currentPath}>
-  <PageHero lang={lang} eyebrow={dict.nav.contact} title={dict.contact.title} sub={dict.contact.sub} image={contactImg} />
+  <PageHero lang={lang} sheetNo="05" eyebrow={dict.nav.contact} title={dict.contact.title} sub={dict.contact.sub} image={contactImg} />
 
   {/* Contact Channels + Map */}
   <section class="bg-ivory">
@@ -45,38 +45,31 @@ const currentPath = localePath(lang, '/contact');
             </a>
           </div>
 
-          {/* Phone */}
-          <div class="mb-10">
-            <a href={`tel:${company.phone.replace(/\s/g, '')}`} class="inline-block">
-              <h3 class="font-semibold text-ink">{dict.contact.phoneLabel}</h3>
-              <p class="mt-2 text-stone-dark hover:text-gold transition-colors">{company.phone}</p>
-            </a>
-          </div>
-
-          {/* Email */}
-          <div class="mb-10">
-            <a href={`mailto:${company.email}`} class="inline-block">
-              <h3 class="font-semibold text-ink">{dict.contact.emailLabel}</h3>
-              <p class="mt-2 text-stone-dark hover:text-gold transition-colors">{company.email}</p>
-            </a>
-          </div>
-
-          {/* Address */}
-          <div class="mb-10">
-            <h3 class="font-semibold text-ink">{dict.contact.addressLabel}</h3>
-            <p class="mt-2 text-stone-dark">{company.address[lang]}</p>
-          </div>
-
-          {/* Hours */}
-          <div class="mb-10">
-            <h3 class="font-semibold text-ink">{dict.contact.hoursLabel}</h3>
-            <p class="mt-2 text-stone-dark">{company.hours[lang]}</p>
-          </div>
-
-          {/* CR Number */}
-          <div>
-            <h3 class="font-semibold text-ink">{dict.contact.crLabel}</h3>
-            <p class="mt-2 text-stone-dark">{company.crNumber}</p>
+          {/* Sheet data table — reads as a drawing's metadata block
+              (label / value rows) rather than repeated h3+p stacks. */}
+          <div class="border border-gold/25 font-mono text-sm">
+            {[
+              { label: dict.contact.phoneLabel, value: company.phone, href: `tel:${company.phone.replace(/\s/g, '')}` },
+              { label: dict.contact.emailLabel, value: company.email, href: `mailto:${company.email}` },
+              { label: dict.contact.addressLabel, value: company.address[lang] },
+              { label: dict.contact.hoursLabel, value: company.hours[lang] },
+              { label: dict.contact.crLabel, value: company.crNumber },
+            ].map((row, i) => {
+              const Tag = row.href ? 'a' : 'div';
+              return (
+                <Tag
+                  href={row.href}
+                  class:list={[
+                    'flex flex-col gap-1 px-4 py-3 transition-colors sm:flex-row sm:items-center sm:justify-between sm:gap-4',
+                    i > 0 && 'border-t border-gold/15',
+                    row.href && 'hover:bg-sand/50',
+                  ]}
+                >
+                  <span class="text-xs uppercase tracking-[0.1em] text-stone-dark">{row.label}</span>
+                  <span class:list={['text-ink', row.href && 'group-hover:text-gold']}>{row.value}</span>
+                </Tag>
+              );
+            })}
           </div>
         </div>
       </Reveal>

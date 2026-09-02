@@ -1,0 +1,30 @@
+---
+// A small graphic scale bar, echoing the one printed on every real survey
+// or architectural drawing — alternating light/dark ticks with distance
+// markers, plus a localized unit label. Purely decorative (illustrative
+// scale, matching how a real drawing's scale bar works graphically), not
+// a claim tied to a specific measured distance.
+import type { Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+---
+
+<div class:list={['inline-flex flex-col gap-1 font-mono text-[0.6rem] tracking-wide text-gold-light', className]} aria-hidden="true">
+  <div class="flex h-2 overflow-hidden border border-current">
+    <span class="w-4 bg-current"></span>
+    <span class="w-4"></span>
+    <span class="w-4 bg-current"></span>
+    <span class="w-4"></span>
+  </div>
+  <div dir="ltr" class="flex justify-between opacity-80">
+    <span>0</span>
+    <span>10</span>
+    <span>20 m</span>
+  </div>
+  <span class="opacity-70">{lang === 'ar' ? 'المقياس' : 'SCALE'}</span>
+</div>

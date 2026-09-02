@@ -1,6 +1,9 @@
 ---
-// Fitout/Construction icon: pillar strokes + a level/plumb line crossing
-// them, echoing the logo's vertical pillar-stroke geometry.
+// Fitout/Construction icon, redrawn as a technical elevation drawing:
+// a building elevation outline with a dashed construction centerline,
+// dimension-style corner ticks, and a survey node — matches the
+// DimensionLine/CoordinateTag visual grammar instead of a generic
+// pillar glyph.
 interface Props {
   class?: string;
 }
@@ -14,13 +17,15 @@ const { class: className } = Astro.props;
   class={className}
   aria-hidden="true"
 >
-  <line x1="15" y1="10" x2="15" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="24" y1="8" x2="24" y2="40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="33" y1="10" x2="33" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="11" y1="10" x2="19" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="11" y1="38" x2="19" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="29" y1="10" x2="37" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="29" y1="38" x2="37" y2="38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="8" y1="24" x2="40" y2="24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-  <circle cx="24" cy="24" r="3" stroke="currentColor" stroke-width="1.5" />
+  <!-- Building elevation outline -->
+  <path d="M10 40V16L24 8L38 16V40" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+  <line x1="10" y1="40" x2="38" y2="40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Dashed construction centerline -->
+  <line x1="24" y1="8" x2="24" y2="40" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2.5" />
+  <!-- Dimension-style corner ticks at the base -->
+  <line x1="10" y1="43" x2="10" y2="37" stroke="currentColor" stroke-width="1" />
+  <line x1="38" y1="43" x2="38" y2="37" stroke="currentColor" stroke-width="1" />
+  <line x1="8" y1="44" x2="40" y2="44" stroke="currentColor" stroke-width="1" />
+  <!-- Survey node -->
+  <circle cx="24" cy="26" r="1.6" fill="currentColor" stroke="none" />
 </svg>
