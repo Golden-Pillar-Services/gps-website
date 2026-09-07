@@ -54,9 +54,12 @@ export const company = {
     clients: 90, // PLACEHOLDER — real client count
   },
 
+  // Empty string = not set yet. Footer renders each icon only when its
+  // URL is non-empty, and hides the whole social row if none are set —
+  // add a real URL here and it appears automatically.
   socials: {
-    instagram: '#', // PLACEHOLDER — real Instagram URL
-    linkedin: '#', // PLACEHOLDER — real LinkedIn URL
-    facebook: '#', // PLACEHOLDER — real Facebook URL
+    instagram: '', // e.g. 'https://instagram.com/goldenpillarservices'
+    linkedin: '',
+    facebook: '',
   },
 } as const;
