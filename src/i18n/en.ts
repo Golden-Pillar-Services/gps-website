@@ -16,6 +16,7 @@ export const en = {
   cta: {
     getQuote: 'Get a Quote',
     whatsapp: 'WhatsApp Us',
+    whatsappChoose: 'Choose a number',
     viewAll: 'View All',
     learnMore: 'Learn More',
     startProject: 'Start Your Project',
@@ -25,21 +26,24 @@ export const en = {
     heroTitle: 'Built on Precision.\nFinished with Pride.',
     heroSub:
       "Fitout, joinery, signage and facility services for Oman's most demanding spaces — delivered on time, to specification.",
+    seoTitle: 'Golden Pillar Services — Fitout & Contracting in Oman',
+    seoDescription:
+      'Commercial fitout, joinery, cleaning and signage contractor in Muscat, Oman. One accountable team, on-time delivery. Get a quote on WhatsApp today.',
     servicesTitle: 'What We Do',
     servicesSub: 'Four trades, one contractor — from first fix to final polish.',
     whyTitle: 'Why Golden Pillar',
     whyPoints: [
       {
         title: 'On-time delivery',
-        body: 'Programmes are built to hold. We track every trade against the schedule and flag risk before it becomes delay.',
+        body: "We build slack into the schedule for whichever trade tends to run late, so a hold-up on one floor doesn't push back the whole handover.",
       },
       {
         title: 'One contractor, every trade',
-        body: 'Fitout, joinery, signage and cleaning under a single point of accountability — no gaps between subcontractors.',
+        body: 'Call one number for fitout, joinery, signage and cleaning. A joinery delay holding up the electrician is our problem to fix, not yours to chase.',
       },
       {
         title: 'Omani market knowledge',
-        body: 'Local approvals, local suppliers, local labour law — we navigate Muscat construction the way it actually works.',
+        body: 'We know which municipal approvals actually stall a project in Muscat, and we clear them before they do.',
       },
     ],
     statsLabels: {
@@ -58,9 +62,14 @@ export const en = {
   servicesPage: {
     title: 'Our Services',
     sub: 'Four disciplines, one standard of finish.',
+    seoTitle: 'Fitout, Joinery, Cleaning & Signage Services | Oman',
+    seoDescription:
+      'Commercial fitout, custom joinery, cleaning and signage services across Oman — fabricated, installed and supported end to end by one contractor.',
     scopeTitle: 'Scope of Work',
     processTitle: 'How We Work',
     galleryTitle: 'Recent Work',
+    whyTitle: 'Why Work With Us on This',
+    faqTitle: 'Common Questions',
   },
 
   footer: {
@@ -69,11 +78,15 @@ export const en = {
     quickLinksTitle: 'Quick Links',
     contactTitle: 'Contact',
     rights: 'All rights reserved.',
+    riyada: 'Registered SME with Riyada, the Public Authority for SME Development',
   },
 
   contact: {
     title: 'Contact Us',
     sub: "Reach out with your project scope — we'll respond within one business day.",
+    seoTitle: 'Contact Golden Pillar Services | Muscat, Oman',
+    seoDescription:
+      'Get in touch with Golden Pillar Services for a fitout, joinery, cleaning or signage quote in Oman. WhatsApp, call, or visit our Al Amerat office.',
     channelsTitle: 'Get in Touch',
     whatsappLabel: 'WhatsApp',
     phoneLabel: 'Phone',
@@ -87,6 +100,9 @@ export const en = {
   about: {
     title: 'About Golden Pillar',
     sub: 'Built by tradespeople, run on discipline.',
+    seoTitle: 'About Golden Pillar Services | Fitout Contractor in Oman',
+    seoDescription:
+      'Golden Pillar Services is an Omani contractor built on precise, on-time fitout, joinery, cleaning and signage work. Read our story and how we work.',
     storyTitle: 'Our Story',
     storyP1:
       'Golden Pillar Services started as a small fitout crew working commercial units across Muscat. The standard was simple: show up, measure twice, finish clean, hand over on the date promised.',
@@ -116,6 +132,9 @@ export const en = {
   projects: {
     title: 'Projects',
     sub: 'Fitout, joinery and signage work across Muscat and beyond.',
+    seoTitle: 'Our Projects | Fitout & Signage Work in Muscat, Oman',
+    seoDescription:
+      'See completed fitout, joinery, cleaning and signage projects by Golden Pillar Services across Muscat and Oman — real sites, real trades, real results.',
     filterAll: 'All',
     lightboxClose: 'Close',
     lightboxNext: 'Next',

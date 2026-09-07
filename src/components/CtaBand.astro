@@ -7,6 +7,7 @@ import { t, localePath, type Lang } from '../i18n';
 import { company } from '../data/company';
 import Reveal from './Reveal.astro';
 import Button from './Button.astro';
+import WhatsAppChooser from './WhatsAppChooser.astro';
 
 interface Props {
   lang: Lang;
@@ -17,7 +18,7 @@ const dict = t(lang);
 const today = new Date();
 ---
 
-<section class="relative overflow-hidden border-t border-gold/30 bg-charcoal">
+<section class="relative z-10 border-t border-gold/30 bg-charcoal">
   <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
     <span class="absolute start-0 top-0 h-7 w-7 border-t-2 border-s-2 border-gold-light/30"></span>
     <span class="absolute end-0 bottom-0 h-7 w-7 border-b-2 border-e-2 border-gold-light/30"></span>
@@ -35,7 +36,7 @@ const today = new Date();
     </Reveal>
     <Reveal delay={2} class="mt-10 flex flex-wrap items-center justify-center gap-4">
       <Button href={localePath(lang, '/contact')} variant="gold">{dict.cta.getQuote}</Button>
-      <Button href={company.whatsappLink} variant="outline">{dict.cta.whatsapp}</Button>
+      <WhatsAppChooser lang={lang} variant="outline" />
     </Reveal>
   </div>
 

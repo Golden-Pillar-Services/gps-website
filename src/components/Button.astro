@@ -4,25 +4,18 @@
 //   outline     — gold hairline border, gold text, fills gold on hover
 //   ghost-light — no fill, light (ivory) text for dark backgrounds, with a
 //                 gold underline-sweep revealed on hover
+import { buttonBase, buttonVariants, type ButtonVariant } from '../lib/buttonStyles';
+
 interface Props {
   href: string;
-  variant?: 'gold' | 'outline' | 'ghost-light';
+  variant?: ButtonVariant;
   class?: string;
 }
 
 const { href, variant = 'gold', class: className } = Astro.props;
-
-const base =
-  'inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3.5 text-sm font-semibold tracking-wide transition-all duration-300';
-
-const variants: Record<string, string> = {
-  gold: 'bg-gold text-charcoal shadow-[0_8px_24px_-8px_rgba(201,147,43,0.55)] hover:bg-gold-light hover:shadow-[0_10px_28px_-6px_rgba(201,147,43,0.6)] hover:-translate-y-0.5',
-  outline: 'border border-gold text-gold hover:bg-gold hover:text-charcoal',
-  'ghost-light': 'gp-btn-ghost text-ivory',
-};
 ---
 
-<a href={href} class:list={[base, variants[variant], className]}>
+<a href={href} class:list={[buttonBase, buttonVariants[variant], className]}>
   <slot />
 </a>
 

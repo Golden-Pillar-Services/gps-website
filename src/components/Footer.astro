@@ -69,11 +69,13 @@ const quickLinks = [
           {dict.footer.contactTitle}
         </h3>
         <ul class="mt-4 space-y-2 text-sm text-ivory/80">
-          <li>
-            <a href={`tel:${company.phone.replace(/\s+/g, '')}`} class="transition-colors hover:text-gold-light">
-              {company.phone}
-            </a>
-          </li>
+          {company.phones.map((p) => (
+            <li>
+              <a href={p.tel} class="block transition-colors hover:text-gold-light">
+                {p.name} — <span dir="ltr">{p.label}</span>
+              </a>
+            </li>
+          ))}
           <li>
             <a href={`mailto:${company.email}`} class="transition-colors hover:text-gold-light">
               {company.email}
@@ -130,6 +132,9 @@ const quickLinks = [
 
     <div class="mt-10 flex flex-col gap-2 border-t border-ivory/10 pt-6 text-xs text-ivory/60 sm:flex-row sm:items-center sm:justify-between">
       <p>{lang === 'ar' ? `س.ت ${company.crNumber}` : `CR No. ${company.crNumber}`}</p>
+      <a href={company.riyadaUrl} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-gold-light">
+        {dict.footer.riyada}
+      </a>
       <p>&copy; {year} {lang === 'ar' ? company.nameAr : company.nameEn}. {dict.footer.rights}</p>
     </div>
   </div>

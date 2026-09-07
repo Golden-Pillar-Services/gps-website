@@ -1,0 +1,38 @@
+---
+// Zero-JS FAQ accordion — native <details>/<summary>, same pattern used
+// for the mobile nav menu and the WhatsApp chooser.
+import type { Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+  faqs: { q: { en: string; ar: string }; a: { en: string; ar: string } }[];
+}
+
+const { lang, faqs } = Astro.props;
+---
+
+<div class="divide-y divide-gold/15 border-y border-gold/15">
+  {faqs.map((faq) => (
+    <details class="gp-faq py-5">
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden [&::marker]:hidden">
+        <span class="font-display text-lg font-semibold text-ink">{lang === 'ar' ? faq.q.ar : faq.q.en}</span>
+        <span class="gp-faq-icon relative h-4 w-4 shrink-0 text-gold" aria-hidden="true">
+          <span class="absolute start-0 top-1/2 h-px w-4 -translate-y-1/2 bg-current"></span>
+          <span class="gp-faq-icon-v absolute start-1/2 top-0 h-4 w-px -translate-x-1/2 bg-current"></span>
+        </span>
+      </summary>
+      <p class="mt-3 max-w-2xl text-base leading-relaxed text-stone-dark">
+        {lang === 'ar' ? faq.a.ar : faq.a.en}
+      </p>
+    </details>
+  ))}
+</div>
+
+<style>
+  .gp-faq-icon-v {
+    transition: transform 0.2s ease;
+  }
+  .gp-faq[open] .gp-faq-icon-v {
+    transform: translateX(-50%) scaleY(0);
+  }
+</style>

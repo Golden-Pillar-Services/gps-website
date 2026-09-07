@@ -8,12 +8,33 @@ import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 
 interface Props {
   lang: Lang;
+  /** SEO <title> — written for search, not reused from the on-page H1.
+   * Keep to ~50-60 characters: brand + service/topic + location. */
   title: string;
+  /** Meta/OG description — written for search snippets, not reused from
+   * the on-page subheading. Keep to ~120-158 characters, keyword-rich. */
   description: string;
   currentPath: string;
+  /** Absolute URL to a page-specific OG image (1200x630). Falls back to
+   * the generic brand OG graphic when a page has no relevant photo. */
+  ogImage?: string;
+  /** Extra JSON-LD objects beyond the LocalBusiness/Organization schema
+   * every page already emits — e.g. a page passes FAQPage, Service, or
+   * BreadcrumbList schema specific to itself. */
+  structuredData?: Record<string, unknown>[];
+  /** Set true on pages that must never be indexed (currently just 404). */
+  noindex?: boolean;
 }
 
-const { lang, title, description, currentPath } = Astro.props;
+const {
+  lang,
+  title,
+  description,
+  currentPath,
+  ogImage: ogImageProp,
+  structuredData = [],
+  noindex = false,
+} = Astro.props;
 const dir = dirFor(lang);
 const dict = t(lang);
 const site = Astro.site ?? new URL('https://goldenpillar.om');
@@ -24,15 +45,22 @@ const withTrailingSlash = (path: string) => (path.endsWith('/') ? path : `${path
 const canonicalUrl = new URL(withTrailingSlash(currentPath), site);
 const enUrl = new URL(withTrailingSlash(currentPath.replace(/^\/(en|ar)/, '/en')), site);
 const arUrl = new URL(withTrailingSlash(currentPath.replace(/^\/(en|ar)/, '/ar')), site);
-const ogImage = new URL('/og-image.png', site);
+const ogImage = ogImageProp ? new URL(ogImageProp, site) : new URL('/og-image.png', site);
+const logoUrl = new URL('/favicon.svg', site);
+const brandName = lang === 'ar' ? company.nameAr : company.nameEn;
 
-// JSON-LD LocalBusiness schema — same facts as src/data/company.ts, read by
-// search engines / rich results rather than rendered on the page.
+// JSON-LD: LocalBusiness (facts from src/data/company.ts) plus an
+// Organization record (logo + social profiles) — search engines use the
+// latter for knowledge-panel logo/sameAs signals independent of the
+// LocalBusiness address facts. Both emitted on every page; pages add more
+// via the `structuredData` prop (FAQPage, Service, BreadcrumbList, ...).
 const localBusinessJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
-  name: lang === 'ar' ? company.nameAr : company.nameEn,
+  '@id': `${site}#business`,
+  name: brandName,
   image: ogImage.toString(),
+  logo: logoUrl.toString(),
   telephone: company.phone,
   email: company.email,
   address: {
@@ -43,7 +71,18 @@ const localBusinessJsonLd = {
   },
   areaServed: 'OM',
   url: canonicalUrl.toString(),
+  sameAs: Object.values(company.socials).filter((url) => url && url !== '#'),
 };
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: brandName,
+  url: site.toString(),
+  inLanguage: lang,
+};
+
+const allStructuredData = [localBusinessJsonLd, websiteJsonLd, ...structuredData];
 ---
 
 <html lang={lang} dir={dir}>
@@ -51,22 +90,35 @@ const localBusinessJsonLd = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
 
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" hreflang="en" href={enUrl} />
-    <link rel="alternate" hreflang="ar" href={arUrl} />
-    <link rel="alternate" hreflang="x-default" href={enUrl} />
+    {!noindex && (
+      <>
+        <link rel="alternate" hreflang="en" href={enUrl} />
+        <link rel="alternate" hreflang="ar" href={arUrl} />
+        <link rel="alternate" hreflang="x-default" href={enUrl} />
+      </>
+    )}
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brandName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={lang === 'ar' ? 'ar_OM' : 'en_OM'} />
+    <meta property="og:locale:alternate" content={lang === 'ar' ? 'en_OM' : 'ar_OM'} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -74,7 +126,9 @@ const localBusinessJsonLd = {
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
+    {allStructuredData.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
+    ))}
   </head>
   <body class="bg-ivory text-ink">
     <a href="#main-content" class="skip-link">{dict.a11y.skipToContent}</a>

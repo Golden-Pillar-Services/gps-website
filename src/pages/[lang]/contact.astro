@@ -4,9 +4,10 @@
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Reveal from '../../components/Reveal.astro';
-import Button from '../../components/Button.astro';
+import WhatsAppChooser from '../../components/WhatsAppChooser.astro';
 import PillarDivider from '../../components/PillarDivider.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import { getImage } from 'astro:assets';
 import { langs, t, localePath, type Lang } from '../../i18n';
 import { company } from '../../data/company';
 import contactImg from '../../assets/img/service-fitout-3.jpg';
@@ -22,9 +23,27 @@ interface Props {
 const { lang } = Astro.props;
 const dict = t(lang);
 const currentPath = localePath(lang, '/contact');
+const ogImage = await getImage({ src: contactImg, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+
+const site = Astro.site ?? new URL('https://goldenpillar.om');
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: dict.nav.home, item: new URL(`/${lang}/`, site).toString() },
+    { '@type': 'ListItem', position: 2, name: dict.nav.contact, item: new URL(`/${lang}/contact/`, site).toString() },
+  ],
+};
 ---
 
-<Base lang={lang} title={dict.contact.title} description={dict.contact.sub} currentPath={currentPath}>
+<Base
+  lang={lang}
+  title={dict.contact.seoTitle}
+  description={dict.contact.seoDescription}
+  currentPath={currentPath}
+  ogImage={ogImage.src}
+  structuredData={[breadcrumbJsonLd]}
+>
   <PageHero lang={lang} sheetNo="05" eyebrow={dict.nav.contact} title={dict.contact.title} sub={dict.contact.sub} image={contactImg} />
 
   {/* Contact Channels + Map */}
@@ -35,33 +54,42 @@ const currentPath = localePath(lang, '/contact');
         <div>
           <h2 class="mb-10 font-display text-2xl font-semibold text-ink">{dict.contact.channelsTitle}</h2>
 
-          {/* WhatsApp - Primary CTA */}
+          {/* WhatsApp - Primary CTA, opens a chooser (two live numbers) */}
           <div class="mb-10">
-            <Button href={company.whatsappLink} variant="gold" class="w-full justify-center text-base py-4">
+            <WhatsAppChooser lang={lang} variant="gold" class="w-full text-base py-4">
               {dict.contact.whatsappLabel}
-            </Button>
-            <a href={company.whatsappLink} class="mt-3 inline-block text-sm text-stone-dark transition-colors hover:text-gold">
-              {company.whatsapp}
-            </a>
+            </WhatsAppChooser>
           </div>
 
           {/* Sheet data table — reads as a drawing's metadata block
-              (label / value rows) rather than repeated h3+p stacks. */}
+              (label / value rows) rather than repeated h3+p stacks. Two
+              live phone lines get their own rows, each independently
+              callable. */}
           <div class="border border-gold/25 font-mono text-sm">
+            {company.phones.map((p, i) => (
+              <a
+                href={p.tel}
+                class:list={[
+                  'flex flex-col gap-1 px-4 py-3 transition-colors hover:bg-sand/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4',
+                  i > 0 && 'border-t border-gold/15',
+                ]}
+              >
+                <span class="text-xs uppercase tracking-[0.1em] text-stone-dark">{p.name}</span>
+                <span dir="ltr" class="text-ink">{p.label}</span>
+              </a>
+            ))}
             {[
-              { label: dict.contact.phoneLabel, value: company.phone, href: `tel:${company.phone.replace(/\s/g, '')}` },
               { label: dict.contact.emailLabel, value: company.email, href: `mailto:${company.email}` },
               { label: dict.contact.addressLabel, value: company.address[lang] },
               { label: dict.contact.hoursLabel, value: company.hours[lang] },
               { label: dict.contact.crLabel, value: company.crNumber },
-            ].map((row, i) => {
+            ].map((row) => {
               const Tag = row.href ? 'a' : 'div';
               return (
                 <Tag
                   href={row.href}
                   class:list={[
-                    'flex flex-col gap-1 px-4 py-3 transition-colors sm:flex-row sm:items-center sm:justify-between sm:gap-4',
-                    i > 0 && 'border-t border-gold/15',
+                    'flex flex-col gap-1 border-t border-gold/15 px-4 py-3 transition-colors sm:flex-row sm:items-center sm:justify-between sm:gap-4',
                     row.href && 'hover:bg-sand/50',
                   ]}
                 >

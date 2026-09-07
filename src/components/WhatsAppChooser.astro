@@ -1,0 +1,48 @@
+---
+// A CTA trigger (styled identically to a Button.astro variant) that opens
+// a small popover listing every live WhatsApp number, since the company
+// now runs two. Zero-JS: native <details>/<summary>, same pattern as the
+// mobile nav menu in Header.astro.
+import { buttonBase, buttonVariants, type ButtonVariant } from '../lib/buttonStyles';
+import WhatsAppPopover from './WhatsAppPopover.astro';
+import { t, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  variant?: ButtonVariant;
+  class?: string;
+  /** Popover opens above the trigger instead of below — for a trigger
+   * near the bottom of the viewport. */
+  openUp?: boolean;
+}
+
+const { lang, variant = 'gold', class: className, openUp = false } = Astro.props;
+const dict = t(lang);
+---
+
+<details class="gp-whatsapp-chooser relative inline-block">
+  <summary
+    class:list={[
+      buttonBase,
+      buttonVariants[variant],
+      'list-none [&::-webkit-details-marker]:hidden [&::marker]:hidden',
+      className,
+    ]}
+  >
+    <slot>{dict.cta.whatsapp}</slot>
+  </summary>
+  <WhatsAppPopover lang={lang} openUp={openUp} />
+</details>
+
+<script>
+  // Close the popover when a choice is clicked, or when the user clicks
+  // outside it — <details> alone stays open after following a link.
+  document.querySelectorAll<HTMLDetailsElement>('details.gp-whatsapp-chooser').forEach((el) => {
+    el.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => (el.open = false)));
+  });
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll<HTMLDetailsElement>('details.gp-whatsapp-chooser[open]').forEach((el) => {
+      if (!el.contains(e.target as Node)) el.open = false;
+    });
+  });
+</script>

@@ -35,9 +35,27 @@ const categoryLabel: Record<string, string> = Object.fromEntries(
 const lightboxSrcs = await Promise.all(
   projects.map((p) => getImage({ src: p.image, width: 1600, format: 'webp' })),
 );
+const ogImage = await getImage({ src: projectsHeroImg, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+
+const site = Astro.site ?? new URL('https://goldenpillar.om');
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: dict.nav.home, item: new URL(`/${lang}/`, site).toString() },
+    { '@type': 'ListItem', position: 2, name: dict.nav.projects, item: new URL(`/${lang}/projects/`, site).toString() },
+  ],
+};
 ---
 
-<Base lang={lang} title={dict.projects.title} description={dict.projects.sub} currentPath={currentPath}>
+<Base
+  lang={lang}
+  title={dict.projects.seoTitle}
+  description={dict.projects.seoDescription}
+  currentPath={currentPath}
+  ogImage={ogImage.src}
+  structuredData={[breadcrumbJsonLd]}
+>
   <PageHero lang={lang} sheetNo="04" eyebrow={dict.nav.projects} title={dict.projects.title} sub={dict.projects.sub} image={projectsHeroImg} />
 
   {/* Filter + grid */}

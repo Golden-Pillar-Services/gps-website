@@ -6,7 +6,9 @@ import ServicesGrid from '../../components/home/ServicesGrid.astro';
 import WhyUs from '../../components/home/WhyUs.astro';
 import FeaturedProjects from '../../components/home/FeaturedProjects.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import { getImage } from 'astro:assets';
 import { langs, t, localePath } from '../../i18n';
+import heroImg from '../../assets/img/hero-fitout.jpg';
 
 export function getStaticPaths() {
   return langs.map((lang) => ({ params: { lang }, props: { lang } }));
@@ -15,10 +17,16 @@ export function getStaticPaths() {
 const { lang } = Astro.props;
 const dict = t(lang);
 const currentPath = localePath(lang, '/');
-const title = lang === 'ar' ? 'الركيزة الذهبية للخدمات' : 'Golden Pillar Services';
+const ogImage = await getImage({ src: heroImg, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 ---
 
-<Base lang={lang} title={title} description={dict.home.heroSub} currentPath={currentPath}>
+<Base
+  lang={lang}
+  title={dict.home.seoTitle}
+  description={dict.home.seoDescription}
+  currentPath={currentPath}
+  ogImage={ogImage.src}
+>
   <Hero lang={lang} />
   <ServicesGrid lang={lang} />
   <WhyUs lang={lang} />

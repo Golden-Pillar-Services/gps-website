@@ -2,6 +2,7 @@
 // Service detail page: charcoal hero w/ service image + tagline, scope of
 // work checklist, 4-step process, a mini gallery, and the shared CtaBand.
 // getStaticPaths crosses every language with every service slug.
+import { Image, getImage } from 'astro:assets';
 import Base from '../../../layouts/Base.astro';
 import SectionHeading from '../../../components/SectionHeading.astro';
 import Reveal from '../../../components/Reveal.astro';
@@ -9,11 +10,15 @@ import ArchImage from '../../../components/ArchImage.astro';
 import CtaBand from '../../../components/CtaBand.astro';
 import ScopeList from '../../../components/services/ScopeList.astro';
 import ProcessSteps from '../../../components/services/ProcessSteps.astro';
+import FaqAccordion from '../../../components/services/FaqAccordion.astro';
+import CoordinateTag from '../../../components/survey/CoordinateTag.astro';
+import DimensionLine from '../../../components/survey/DimensionLine.astro';
 import IconFitout from '../../../components/icons/IconFitout.astro';
 import IconCleaning from '../../../components/icons/IconCleaning.astro';
 import IconJoinery from '../../../components/icons/IconJoinery.astro';
 import IconSignage from '../../../components/icons/IconSignage.astro';
 import { langs, t, localePath, type Lang } from '../../../i18n';
+import { company } from '../../../data/company';
 import { services, type Service, type ServiceSlug } from '../../../data/services';
 import type { ImageMetadata } from 'astro';
 
@@ -67,52 +72,158 @@ const images = gallery[service.slug];
 const title = lang === 'ar' ? service.title.ar : service.title.en;
 const tagline = lang === 'ar' ? service.tagline.ar : service.tagline.en;
 const scopeItems = lang === 'ar' ? service.scope.ar : service.scope.en;
+
+const sheetNos: Record<ServiceSlug, string> = {
+  'fitout-construction': '03.1',
+  'cleaning-services': '03.2',
+  joinery: '03.3',
+  signage: '03.4',
+};
+const today = new Date();
+const revLabel = `${lang === 'ar' ? 'مراجعة' : 'REV.'} ${today.getFullYear()}`;
+const seoTitle = service.seoTitle[lang];
+const seoDescription = service.seoDescription[lang];
+const ogImage = await getImage({ src: images[0], width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+
+const site = Astro.site ?? new URL('https://goldenpillar.om');
+const pageUrl = new URL(currentPath.endsWith('/') ? currentPath : `${currentPath}/`, site).toString();
+const servicesUrl = new URL(localePath(lang, '/services').concat('/'), site).toString();
+const homeUrl = new URL(`/${lang}/`, site).toString();
+
+// FAQPage — the FAQ accordion below already has this content on-page;
+// this is the same Q&As marked up for a rich-result eligibility, per
+// schema.org/FAQPage.
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: service.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q[lang],
+    acceptedAnswer: { '@type': 'Answer', text: faq.a[lang] },
+  })),
+};
+
+// Service — names the specific trade as a schema.org Service offered by
+// the LocalBusiness (see Base.astro), scoped to Oman.
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: title,
+  description: tagline,
+  serviceType: title,
+  areaServed: { '@type': 'Country', name: 'Oman' },
+  provider: { '@type': 'LocalBusiness', '@id': `${site}#business` },
+  url: pageUrl,
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: dict.nav.home, item: homeUrl },
+    { '@type': 'ListItem', position: 2, name: dict.nav.services, item: servicesUrl },
+    { '@type': 'ListItem', position: 3, name: title, item: pageUrl },
+  ],
+};
 ---
 
-<Base lang={lang} title={title} description={tagline} currentPath={currentPath}>
-  {/* Hero */}
-  <section class="relative overflow-hidden border-b border-gold/50 bg-charcoal">
-    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:py-32">
-      <div>
-        <Reveal>
-          <Icon class="h-10 w-10 text-gold" />
-        </Reveal>
+<Base
+  lang={lang}
+  title={seoTitle}
+  description={seoDescription}
+  structuredData={[faqJsonLd, serviceJsonLd, breadcrumbJsonLd]}
+  currentPath={currentPath}
+  ogImage={ogImage.src}
+>
+  {/* Hero — full-bleed service photo, same survey/blueprint language as
+      every other page hero (was a plain side-by-side image card before,
+      the one hero on the site that never got the treatment). */}
+  <section class="relative min-h-[65vh] overflow-hidden bg-charcoal sm:min-h-[70vh]">
+    <Image
+      src={images[0]}
+      alt=""
+      widths={[960, 1400, 1800]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+    <div class="absolute inset-0 bg-linear-to-t from-charcoal from-12% via-charcoal/85 via-48% to-charcoal/15" aria-hidden="true"></div>
+
+    <div class="pointer-events-none absolute inset-6 hidden sm:inset-10 sm:block" aria-hidden="true">
+      <span class="absolute start-0 top-0 h-7 w-7 border-t-2 border-s-2 border-gold-light/50"></span>
+      <span class="absolute end-0 top-0 h-7 w-7 border-t-2 border-e-2 border-gold-light/50"></span>
+      <span class="absolute start-0 bottom-0 h-7 w-7 border-b-2 border-s-2 border-gold-light/50"></span>
+      <span class="absolute end-0 bottom-0 h-7 w-7 border-b-2 border-e-2 border-gold-light/50"></span>
+    </div>
+
+    <Reveal class="absolute end-8 top-24 hidden sm:end-12 sm:top-28 sm:block">
+      <CoordinateTag text="23.5880° N, 58.4059° E" numeric />
+    </Reveal>
+
+    <div class="relative flex min-h-[65vh] flex-col justify-end px-5 pb-14 pt-28 sm:min-h-[70vh] sm:px-10 lg:px-16">
+      <Reveal class="max-w-2xl border border-gold-light/35 bg-charcoal/60 p-5 backdrop-blur-sm sm:p-7">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-gold-light/85 sm:text-xs">
+          <span>{lang === 'ar' ? `لوحة ${sheetNos[service.slug]}` : `SHEET ${sheetNos[service.slug]}`} — {dict.nav.services}</span>
+          <span class="text-gold-light/40">/</span>
+          <span>{revLabel}</span>
+          <span class="text-gold-light/40">/</span>
+          <span>{lang === 'ar' ? company.nameAr : company.nameEn}</span>
+        </div>
+        <div class="mt-3 h-px w-full bg-gold-light/30" aria-hidden="true"></div>
+
         <Reveal delay={1}>
-          <h1 class="mt-6 font-display text-4xl font-semibold leading-tight text-ivory sm:text-5xl">
-            {title}
-          </h1>
+          <Icon class="mt-4 h-9 w-9 text-gold-light" />
         </Reveal>
-        <Reveal delay={2}>
-          <p class="mt-5 max-w-xl text-lg text-ivory/75">{tagline}</p>
+        <h1 class="mt-3 font-display text-3xl font-semibold leading-[1.02] tracking-tight text-ivory sm:text-5xl">
+          {title}
+        </h1>
+        <Reveal delay={2} class="mt-4 max-w-lg text-base text-ivory/70 sm:text-lg">
+          <p>{tagline}</p>
         </Reveal>
-      </div>
-      <Reveal delay={2}>
-        <ArchImage
-          src={images[0]}
-          alt={title}
-          class="shadow-xl"
-          loading="eager"
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          widths={[480, 800, 1200, 1600]}
-        />
       </Reveal>
     </div>
+
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gold/50" aria-hidden="true"></div>
   </section>
 
-  {/* Scope of work */}
+  {/* Intro + Scope of work */}
   <section class="bg-ivory">
     <div class="mx-auto max-w-4xl px-4 py-20 sm:px-6">
       <Reveal>
+        <p class="max-w-3xl font-display text-xl leading-relaxed text-ink sm:text-2xl">
+          {service.intro[lang]}
+        </p>
+      </Reveal>
+      <Reveal delay={1} class="mt-14">
         <SectionHeading title={dict.servicesPage.scopeTitle} />
       </Reveal>
-      <Reveal delay={1} class="mt-10">
+      <Reveal delay={2} class="mt-10">
         <ScopeList items={scopeItems} />
       </Reveal>
     </div>
   </section>
 
-  {/* Process */}
+  {/* Why work with us on this trade */}
   <section class="border-y border-gold/15 bg-sand">
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <Reveal>
+        <SectionHeading title={dict.servicesPage.whyTitle} />
+      </Reveal>
+      <div class="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-3">
+        {service.whyPoints.map((point, i) => (
+          <Reveal delay={(Math.min(i + 1, 6) as 1 | 2 | 3 | 4 | 5 | 6)}>
+            <DimensionLine orientation="horizontal" class="h-3 w-16" />
+            <h3 class="mt-3 font-display text-xl font-semibold text-ink">{point.title[lang]}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-stone-dark">{point.body[lang]}</p>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* Process */}
+  <section class="bg-ivory">
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
       <Reveal>
         <SectionHeading title={dict.servicesPage.processTitle} />
@@ -124,7 +235,7 @@ const scopeItems = lang === 'ar' ? service.scope.ar : service.scope.en;
   </section>
 
   {/* Mini gallery */}
-  <section class="bg-ivory">
+  <section class="border-y border-gold/15 bg-sand">
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
       <Reveal>
         <SectionHeading title={dict.servicesPage.galleryTitle} />
@@ -136,6 +247,18 @@ const scopeItems = lang === 'ar' ? service.scope.ar : service.scope.en;
           </Reveal>
         ))}
       </div>
+    </div>
+  </section>
+
+  {/* FAQ */}
+  <section class="bg-ivory">
+    <div class="mx-auto max-w-4xl px-4 py-20 sm:px-6">
+      <Reveal>
+        <SectionHeading title={dict.servicesPage.faqTitle} />
+      </Reveal>
+      <Reveal delay={1} class="mt-10">
+        <FaqAccordion lang={lang} faqs={service.faqs} />
+      </Reveal>
     </div>
   </section>
 
