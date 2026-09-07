@@ -5,9 +5,9 @@
 // the site), differentiator points each marked with a small survey
 // reticle instead of a plain vertical rule.
 import { t, type Lang } from '../../i18n';
-import { company } from '../../data/company';
 import SectionHeading from '../SectionHeading.astro';
 import Reveal from '../Reveal.astro';
+import CoordinateTag from '../survey/CoordinateTag.astro';
 import { Image } from 'astro:assets';
 import whyImg from '../../assets/img/about-02.jpg';
 
@@ -35,25 +35,13 @@ const dict = t(lang);
           <span class="absolute end-3 bottom-3 h-6 w-6 border-b-2 border-e-2 border-gold-light/60"></span>
         </div>
 
-        {/* Site data plate — overlaid on the photo like a real nameplate,
-            not a separate box floating in the text column. */}
-        <div class="absolute inset-x-3 bottom-3 border border-gold-light/40 bg-charcoal/80 font-mono text-sm backdrop-blur-sm sm:inset-x-4 sm:bottom-4">
-          {[
-            { label: dict.home.statsLabels.years, value: company.stats.years },
-            { label: dict.home.statsLabels.projects, value: company.stats.projects },
-            { label: dict.home.statsLabels.clients, value: company.stats.clients },
-          ].map((row, i) => (
-            <div
-              class:list={[
-                'flex items-center justify-between gap-4 px-4 py-2.5',
-                i > 0 && 'border-t border-gold-light/20',
-              ]}
-            >
-              <span class="text-xs uppercase tracking-[0.1em] text-ivory/60 sm:text-sm">{row.label}</span>
-              <span class="text-gold-light" data-counter={row.value}>0</span>
-            </div>
-          ))}
-        </div>
+        {/* A single real, verifiable fact (CR establishment date) rather
+            than a projects/clients-count stat block — that pattern reads
+            as generic AI marketing and was dropped deliberately. */}
+        <CoordinateTag
+          text={lang === 'ar' ? 'تأسست 2024' : 'EST. 2024'}
+          class="absolute bottom-3 start-3 sm:bottom-4 sm:start-4"
+        />
       </div>
     </Reveal>
 

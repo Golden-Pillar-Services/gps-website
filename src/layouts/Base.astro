@@ -59,6 +59,8 @@ const localBusinessJsonLd = {
   '@type': 'LocalBusiness',
   '@id': `${site}#business`,
   name: brandName,
+  legalName: lang === 'ar' ? company.legalNameAr : company.legalNameEn,
+  foundingDate: '2024-02-05',
   image: ogImage.toString(),
   logo: logoUrl.toString(),
   telephone: company.phone,

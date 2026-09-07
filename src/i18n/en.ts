@@ -46,11 +46,6 @@ export const en = {
         body: 'We know which municipal approvals actually stall a project in Muscat, and we clear them before they do.',
       },
     ],
-    statsLabels: {
-      years: 'Years in Business',
-      projects: 'Projects Delivered',
-      clients: 'Clients Served',
-    },
     featuredTitle: 'Recent Work',
     featuredSub: 'A sample of spaces we have built, fitted and finished.',
     ctaBand: {

@@ -99,6 +99,10 @@ body {
   [data-reveal].revealed {
     opacity: 1;
     transform: none;
-    filter: blur(0);
+    /* filter: none (not blur(0)) — a lingering blur(0) still creates a
+       CSS filter compositing layer, which clips absolutely-positioned
+       descendants (e.g. the WhatsApp dropdown) to this element's box in
+       Chromium, even though it looks identical to no blur at all. */
+    filter: none;
   }
 }

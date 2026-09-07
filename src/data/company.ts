@@ -3,8 +3,18 @@
 // the "Before launch" checklist in the project README, added in Task 12).
 
 export const company = {
-  nameEn: 'Golden Pillar Services', // PLACEHOLDER — confirm exact registered trading name
-  nameAr: 'الركيزة الذهبية للخدمات', // PLACEHOLDER — confirm exact registered Arabic name
+  // Short brand form (matches the logo mark) — used in nav, title-block
+  // meta rows, and general on-page mentions.
+  nameEn: 'Golden Pillar Services',
+  nameAr: 'الركيزة الذهبية للخدمات',
+
+  // Exact registered legal entity name, per Oman Business Platform
+  // Commercial Registration Certificate (CR 1534792, established
+  // 05/02/2024). Used for the footer copyright line and the JSON-LD
+  // `legalName` field, where legal precision matters more than the
+  // shorter brand form above.
+  legalNameEn: 'Golden Pillar Services Establishment LLC',
+  legalNameAr: 'مؤسسة الخدمات للأعمدة الذهبية ش م م',
 
   // Two live phone lines, each a named contact person, both also
   // WhatsApp-reachable. `phone` is kept as a single value for the
@@ -46,12 +56,6 @@ export const company = {
   hours: {
     en: 'Sun – Thu, 8:00 AM – 6:00 PM', // PLACEHOLDER — confirm real working hours
     ar: 'الأحد – الخميس، 8:00 صباحًا – 6:00 مساءً', // PLACEHOLDER — confirm real working hours
-  },
-
-  stats: {
-    years: 12, // PLACEHOLDER — real years in business
-    projects: 240, // PLACEHOLDER — real completed project count
-    clients: 90, // PLACEHOLDER — real client count
   },
 
   // Empty string = not set yet. Footer renders each icon only when its
