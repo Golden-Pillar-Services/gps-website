@@ -71,6 +71,22 @@ const localBusinessJsonLd = {
     addressLocality: 'Muscat',
     addressCountry: 'OM',
   },
+  // Matches the coordinate tag shown in PageHero/Hero UI — keeps the map
+  // pin and "near me" distance-ranking signal aligned with the on-page one.
+  geo: { '@type': 'GeoCoordinates', latitude: 23.588, longitude: 58.4059 },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+    opens: '08:00',
+    closes: '18:00',
+  },
+  contactPoint: company.phones.map((p) => ({
+    '@type': 'ContactPoint',
+    telephone: p.tel.replace('tel:', ''),
+    contactType: 'customer service',
+    areaServed: 'OM',
+    availableLanguage: ['en', 'ar'],
+  })),
   areaServed: 'OM',
   url: canonicalUrl.toString(),
   sameAs: Object.values(company.socials).filter((url) => url && url !== '#'),
